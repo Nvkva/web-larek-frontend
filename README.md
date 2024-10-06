@@ -41,7 +41,7 @@ npm run build
 yarn build
 ```
 
-## Архитектура проекта
+## Архитектура проекта (MVC)
 
 Для упрощения рефакторинга будет создан файл с константами для всего проекта. В нем также будут прописаны URL для доступа к API:
 
@@ -53,11 +53,6 @@ export const SETTINGS: Settings = {
   // константы
 }
 ```
-
-Интерфейс можно условно разделить на 3 процесса:
-1. Просмотр списка продуктов (`MainScreen`)
-2. Просмотр конкретного продукта (`ProductViewScreen`)
-3. Оформление заказа (`BasketScreen`, `OrderScreen`, `SuccessScreen`)
 
 В этом проекте будет использоваться архитектурный паттерн MVC. 
 
@@ -91,93 +86,46 @@ app.on('change:value', () => {
 // Screen.onClick -> Controller.onClick -> Model.value -> Screen.value
 ```
 
+### Model (Модели)
+
+Модели в проекте будут представлены классом `AppState`, который содержит в себе все данные и логику работы с ними. Модель частично реализует паттерн "Наблюдатель", и уведомляет об изменениях через метод `onChange(changes: AppStateChanges)`. Для удобства работы с данными в модели реализованы методы для изменения данных, которые в свою очередь вызывают метод `onChange()`.
+
+#### enum AppStateModals
+Назначение: содержит перечисление модальных окон в проекте
+
+#### enum AppStateChanges
+Назначение: содержит перечисление состояний приложения
+
+#### Интефрейс AppState
+Назначение: Интейрфейс стейта приложения
+
+Атрибуты:  
+`products: Map<string, Product>;` - полученные с сервера продукты
+`selectedProduct: Product | null;` - выбранный продукт
+`openedModal: AppStateModals;` - октрытая в данный момент модалка
+
+Методы:  
+`loadProducts(): Promise<void>;` - загрузить продукты
+`loadProductItem(id: string): Promise<void>;` - запросить конкретный продукт
+`openModal(modal: AppStateModals): void;` - открыть модальное окно
+
+#### Интефрейс AppStateSettings
+Назначение: настройка стейта
+
+Атрибуты:  
+`storageKey: string` - ключ стейта
+
+Методы:  
+`onChange: (changed: AppStateChanges) => void;` - функция, которая будет вызываться при изменении состояния 
+
+#### Интефрейс AppStateConstructor
+Назначение: конструктор стейта
+
+Атрибуты:  
+`api: IProductAPI` - используемое API
+`settings: AppStateSettings` - настройки стейта
+
 ### View (Отображения)
-
-Общий функционал модальных окон будет вынесен в абстрактный класс `ModalScreen`. Все модальные окна наследуются от него и переопределяют методы для своей реализации.
-
-`ModalScreen`
-
-```typescript
-/**
- * Общая логика и структура модальных окон
- */
-export abstract class ModalScreen<
-	M, // внутренние данные для контента модального окна
-	C, // внешние данные для экрана
-	S extends ModalScreenSettings // настройки экрана (обработчики событий
-> extends Screen<C, S> {
-	// модальное окно
-	protected declare modal: ModalView<M>;
-	// кнопка подтверждения
-	protected declare submitButton: HTMLButtonElement;
-
-	abstract initContent(): IView<M>;
-
-	// Переопределенный init() для инициализации модального окна
-	protected init() {
-		this.submitButton = this.getSubmitButton(
-			SETTINGS.modal,
-			this.settings.onSubmit
-		);
-
-		this.modal = this.getModalView(
-			{
-				contentView: this.initContent(),
-			},
-			this.settings.onClose
-		);
-
-		this.element = this.modal.element;
-	}
-
-	// Вспомогательные методы
-
-	protected getSubmitButton(
-		settings: { submitLabel: string; submitSettings: ElementCreator },
-		onClick: () => void
-	) {
-		return ButtonView.make<HTMLButtonElement>(
-			settings.submitLabel,
-			settings.submitSettings,
-			onClick
-		);
-	}
-
-	protected getModalView(
-		settings: { contentView: IView<M> },
-		onClose: () => void
-	) {
-		return new ModalView<M>(ensureElement(SETTINGS.modalTemplate), {
-			...SETTINGS.modalSettings,
-			...settings,
-			actionsElement: [this.submitButton],
-			onClose,
-		});
-	}
-
-	// Методы установки данных
-
-	set content(value: M) {
-		this.modal.content = value;
-	}
-
-	set isActive(value: boolean) {
-		this.modal.isActive = value;
-	}
-
-	set isDisabled(state: boolean) {
-		this.submitButton.disabled = state;
-	}
-}
-```
-
-```typescript
-export abstract class Screen<T, S extends object> extends View<T, S> {
-	constructor(settings: S) {
-		super(null, settings);
-	}
-}
-```
 
 Отображения в проекте разделены на три типа:
 - `common` — общие компоненты, не зависящие от доменной области проекта
@@ -186,78 +134,7 @@ export abstract class Screen<T, S extends object> extends View<T, S> {
 
 Первые два типа (common и partial) независимо типизированы, не используют глобальных настроек напрямую и могут быть легко переносимы между проектами. Экраны (screen) же зависят от глобальных настроек и используют их для инициализации и передачи данных между вложенными отображениями, так как по факту это соединительный код для удобства вынесенные в отдельные файлы и оформленный как отображение.
 
-Каждое отображение (кроме Screen) устроено следующим образом:
-
-```typescript
-class Component extends View<Тип_данных, Тип_настроек> {
-    constructor(public element: HTMLElement, protected readonly settings: Settings) {
-        super(element, settings);
-        // Не переопределяем конструктор в своих отображениях!
-    }
-		
-	protected init() {
-        // Используем метод жизненного цикла, для инициализация компонента	
-        // Здесь вешаем события
-    }	
-
-    set value(value: number) {
-        // Устанавливаем поле данных "value" в верстке
-    }
-		
-    render() {
-        // Отрисовка компонента
-        // Переопределяем только по необходимости
-        return this.element;
-    }
-}
-```
-
-Если необходимо использовать в одном отображении другие, то передаем их через настройки, не создавая зависимость напрямую. Пример:
-
-```typescript
-interface ChildData {
-    value: number;
-}
-
-interface ComponentData {
-	content: ChildData;
-}
-
-interface ComponentSettings {
-	contentView: IView<ChildData> // Ждем отображение принимающее данные типа ChildData
-}
-
-class Component extends View<Тип_данных, Тип_настроек> {
-    set content(data: ChildData) {
-        this.settings.contentView.render(data);
-        // или this.settings.contentView.value = data.value; 
-    }
-}
-```
-
 Если нужно использовать переданное отображение как шаблон, то можно использовать метод `copy()` — копирующие конструктор, который создает новый экземпляр отображения с теми же настройками (но их можно переопределить через параметры метода).
-
-Класс `Screen` выглядит следющим образом:
-
-```typescript
-export abstract class Screen<T, S extends object> extends View<T, S> {
-	constructor(settings: S) {
-		super(null, settings);
-	}
-}
-```
-
-Интерфейс базового класса `IView`:
-
-```typescript
-export interface IView<T, S = object> {
-	// отображение для заданного типа данных
-	element: HTMLElement; // корневой элемент
-	copy(settings?: S): IView<T>; // копирующий конструктор
-	render(data?: Partial<T>): HTMLElement; // метод рендера
-}
-```
-
 
 В общем случае при создании класса отображения мы передаем HTMLElement при помощи вызовов функций из `utils.ts` (`ensureElement`, `cloneTemplate`, `createElement`)
 Пример:
@@ -269,117 +146,278 @@ this.item = new CardView(cloneTemplate(SETTINGS.cardCatalog), {
 }),
 ```
 
-### Model (Модели)
+Описания классов Отображений:
 
-Модели в проекте будут представлены классом `AppState`, который содержит в себе все данные и логику работы с ними. Модель частично реализует паттерн "Наблюдатель", и уведомляет об изменениях через метод `onChange(changes: AppStateChanges)`. Для удобства работы с данными в модели реализованы методы для изменения данных, которые в свою очередь вызывают метод `onChange()`.
+## `base`
 
-В целом типовая модель данных выглядит следующим образом:
+#### Интерфейс IView<T, S = object>  
+Назначение: Тип для отображения заданного типа данных
 
-```typescript
-enum ModelChanges {
-    // Изменения в модели
-    value = 'change:value'
-}
+Атрибуты:  
+`element`: HTMLElement; - корневой элемент
 
-interface ModelSettings {
-    // Настройки модели
-    onChange(changes: ModelChanges): void;
-}
+Методы:  
+`copy(settings?: S): IView<T>;` - метод копирования компонента отображения
+`render(data?: Partial<T>): HTMLElement;` - метод рендера компонента отображения
 
-class Model {
-    constructor(
-			protected api: Api, // API для работы с данными
-            protected settings: ModelSettings // Настройки и обработчики событий
-    ) {
-        // Инициализация модели
-    }
 
-    // Методы для изменения данных
-    public changeValue(value: number) {
-        // Изменение данных
-        this.onChange(ModelChanges.value);
-    }
-}
-```
+#### Интерфейс IViewConstructor<T, S>  
+Назначение: Тип конструктора отображения, который получает на вход клонированный шаблон или существующий элемент, а также настройки для отображения
+
+Методы:  
+new (root: HTMLElement, settings: S): IView<T>; - возвращает элемент отображения
+
+#### Тип IClickableEvent<T>  
+Назначение: тип для события клика
+
+Атрибуты:  
+`event`: MouseEvent - событие клика мышью
+`item?`: T - данные элемента, по которому кликнули
+
+#### Интерфейс IClickable<T>
+Назначение: интерфейс для кликабельного элемента
+
+Методы:  
+`onClick: (args: IClickableEvent<T>) => void;` - метод клика
+
+#### Тип IChangeableEvent<T> 
+Назначение: тип для события изменения
+
+Атрибуты:  
+`event`: Event - событие изменения
+`value?`: T - значение изменяемого элемента
+
+#### Интерфейс IChangeable<T>
+Назначение: интерфейс для изменяемого отображения
+
+Методы:  
+`onChange: (args:  IChangeableEvent<T>) => void;` - метод изменения
+
+#### Тип ISelectableEvent<T> 
+Назначение: тип для события выбора отображения
+
+Атрибуты:  
+`event`: Event - событие выбора
+`value?`: T - значение выбираемого элемента
+
+#### Интерфейс ISelectable<T>
+Назначение: интерфейс для выбираемого отображения
+
+Методы:  
+`onChange: (args: ISelectableEvent<T>) => void;` - метод выбора
+
+
+## `common`
+
+#### Интерфейс `ButtonData`
+Назначение: Данные для отображения компонента кнопки
+
+Атрибуты:  
+`label`: string - Текст, отображаемый внутри кнопки
+
+#### Интерфейс `ButtonSettings`
+Назначение: Настройки для отображения кнопки, в которых содержатся значения из константы `settings` (значения селекторов, переданные методы). В данном случае пустые, но при необходимости можно добавить значения.
+
+#### Интерфейс `ListData<T>`
+Назначение: Данные для отображения компонента списка элементов
+
+Атрибуты:  
+`items`: T[] - массив объектов данных для отображения элементов списка
+
+#### Интерфейс `ListSettings<T>`
+Назначение: Настройки для отображения компонента списка элементов, в которых содержатся значения из константы `settings` (значения селекторов).
+
+Атрибуты:  
+`item`: IView<T, unknown>; - значение отображение для рендеринга с данными типа T
+`itemClass`: string; - значение селектора элемента списка карточки продукта
+
+#### Интерфейс `ItemData`
+Назначение: Тип для ограничения дженерика, т.к. мы должны быть уверены, что в данных для отображения элемента списка присутствует идентификатор
+
+Атрибуты:  
+`id`: string; - значение идентификатора карточки (продукта)
+
+#### Интерфейс `ModalData`
+Назначение: Тип для данных отображения модального окна
+
+Атрибуты:  
+`content`: string; - значение отображения для рендера в модальном окне
+`isActive`: string; - значение видимости модального окна на странице
+
+#### Интерфейс `ModalSettings`
+Назначение: Настройки для отображения модального окна, в которых содержатся значения из константы `settings` (значения селекторов, переданные методы)
+
+Атрибуты:  
+`close: string;` - значение селектора кнопки закрытия диалога
+`title: string;` - значение селектора заголовка модального окна
+`content: string;` - значение селектора контейнера контента модального окна
+`actions: string;` - значение селектора контейнера с действиями модального окна
+`contentView: IView<C>;` - значение отображения для рендера
+`activeClass: string;` - значение класса активности модального окна
+	
+
+Методы:  
+`onOpen?: () => void;` - метод, вызывающийся при открытии модального окна
+`onClose?: () => void;` - метод, вызывающийся при закрытии модального окна
+
+## `partial`
+
+#### Интерфейс `CardData`
+Назначение: Тип для данных отображения карточки списка продуктов
+
+Атрибуты:  
+`id: string;` - идентификатор
+`image: string;` - ссылка на изображение
+`title: string;` - название
+
+#### Интерфейс `CardSettings`
+Назначение: Настройки для отображения карточки списка продуктов, в которых содержатся значения из константы `settings` (значения селекторов)
+
+Атрибуты:  
+`category: string,` - значение селектора категории
+`title: string,` - значение селектора названия
+`image: string,` - значение селектора изображения
+`price: string,` - значение селектора цены
+
+
+#### Интерфейс `PageData`
+Назначение: Тип для данных отображения главной страницы (page)
+
+Атрибуты:  
+`counter: number;` - значение количества элементов в корзине
+`isLocked: boolean;` - значение блокирования прокрутки экрана (при открытии модального окна)
+
+#### Интерфейс `PageSettings`
+Назначение: Настройки для отображения главной страницы, в которых содержатся значения из константы `settings` (значения селекторов)
+
+Атрибуты:  
+`wrapper: string;` - значение селектора обертки
+`counter: string;` - значение селектора счетчкика продуктов в корзине
+`basket: string;` - значение селектора корзины
+`lockedClass: string;` - значение класса блокировки прокрутки экрана
+
+#### Интерфейс `ProductData`
+Назначение: Тип для данных отображения данных конкретного продукта
+
+Атрибуты:  
+`id: string;` - идентификатор
+`description: string;` - описание
+`image: string;` - ссылка на изображение
+`title: string;` - название
+`category: string;` - категория
+`price: number;` - цена
+
+
+#### Интерфейс `ProductViewSettings`
+Назначение: Настройки для отображения конкретного продукта, в которых содержатся значения из константы `settings` (значения селекторов)
+
+Атрибуты:  
+`image: string;` - значение селектора ссылки на изображение
+`title: string;` - значение селектора названия
+`description: string;` - значение селектора описания
+`category: string;` - значение селектора категории
+`price: string;` - значение селектора цены
+
+## `screen`
+
+От интерфейсов `ModalScreenData` и `ModalScreenSettings` наследуются другие интерфейсы контента модальных окон, предствленных в screen
+
+#### Интерфейс `ModalScreenData`
+Назначение: Тип для данных отображения контента внутри модального окна
+
+Атрибуты:  
+`isDisabled: boolean;` - задизейблена ли кнопка submit
+`isActive: boolean;` - отображается ли модальное окно
+
+
+#### Интерфейс `ModalScreenSettings`
+Назначение: Настройки для отображения контента модального окна
+
+Методы:  
+`onClose: () => void;` - метод, вызывающийся при открытии модального окна
+`onSubmit: () => void;` - метод, вызывающийся при закрытии модального окна 
+
+
+
+#### Интерфейс `BasketData`
+Назначение: Тип для данных отображения модального окна корзины
+
+Атрибуты:  
+`products: ProductData[];` - продукты
+`total: string;` - общая цена
+
+#### Интерфейс `BasketSettings`
+Назначение: Настройки для отображения контента модального окна корзины
+
+Методы:  
+`onRemove: (id: string) => void;` - метод, вызывающийся при удалении продукта из корзины
+
+#### Интерфейс `CredentialsData`
+Назначение: Тип для данных отображения модального окна данных пользователя
+
+Атрибуты:  
+`email: string;` - почта
+`phone: string;` - телефон
+
+#### Интерфейс `CredentialsSettings`
+Назначение: Настройки для отображения контента модального окна данных пользователя
+
+#### Интерфейс `MainData`
+Назначение: Тип для данных отображения страницы со списком элементов
+
+Атрибуты:  
+`items: CardData[];` - данные для отображаемых элементов
+`selected: Product;` - выбранный продукт
+
+#### Интерфейс `MainSettings`
+Назначение: Настройки для отображения страницы со списком элементов
+
+Методы:  
+`onOpenBasket: () => void;` - метод открытия корзины
+`onOpenProduct: (id: string) => void;` - метод открытия продукта
+
+#### Интерфейс `ProductViewData`
+Назначение: Тип для данных отображения модального окна просмотра продукта
+
+Атрибуты:  
+`product: ProductData` - данные продукта
+
+#### Интерфейс `ProductViewScreenSettings`
+Назначение: Настройки для отображения контента модального окна просмотра продукта
+
+#### Интерфейс `SuccessData`
+Назначение: Тип для данных отображения модального окна успешной покупки
+
+#### Интерфейс `SuccessScreenSettings`
+Назначение: Настройки для отображения контента модального окна успешной покупки
 
 ### Controller (Контроллеры)
 
-Контроллеры в проекте будут представлены классами унаследованными от `Controller`, и являются обработчиками пользовательских действий и обновляют состояние модели через ее методы. Контроллеры принимают в себя экземпляр модели и обрабатывают события, вызывая методы модели для изменения данных.
+#### Класс `Controller<T>`
+Назначение: Контроллеры в проекте будут представлены классами унаследованными от `Controller`, и являются обработчиками пользовательских действий и обновляют состояние модели через ее методы. Контроллеры принимают в себя экземпляр модели и обрабатывают события, вызывая методы модели для изменения данных.
 
-Пример контроллера:
-
-```typescript
-class Controller {
-    constructor(
-        protected model: Model // Модель для работы с данными
-    ) {
-        // Инициализация контроллера
-    }
-
-    public onClick = () => { // чтобы не потерять контекст
-        // Обработка события
-        this.model.changeValue();
-    }
-}
-```
+Атрибуты:  
+`model: T` - модель для работы с данными
 
 ### Работа с API
 
-Для работы с API будет создан базовый класс с общим функционалом, от которого будут наследоваться другие классы API:
+#### Класс `Api`
+Назначение: Для работы с API будет создан базовый класс с общим функционалом, от которого будут наследоваться другие классы API
 
-```typescript
-/**
- * Базовый класс для работы с API
- */
-export class Api {
-	readonly baseUrl: string;
-	protected _options: RequestInit;
+Атрибуты:  
+`baseUrl: string;` - базовый адрес для запроса
+`_options: RequestInit;` - опции
 
-	constructor(baseUrl: string, options: RequestInit = {}) {
-		this.baseUrl = baseUrl;
-		this._options = {
-			headers: {
-				'Content-Type': 'application/json',
-				...((options.headers as object) ?? {}),
-			},
-		};
-	}
+Методы:  
+`_handleResponse<T>(response: Response): Promise<T> ` - метод обработки ответа
+`_get<T>(uri: string, method = EnumApiMethods.GET)` - метод GET запроса
+`_post<T>(uri: string,data: object,method = EnumApiMethods.POST)` - метод POST запроса
 
-	protected async _handleResponse<T>(response: Response): Promise<T> {
-		if (response.ok) return response.json();
-		const data = (await response.json()) as ErrorState;
-		return Promise.reject(data.error ?? response.statusText);
-	}
+#### Интерфейс `IProductAPI`
+Назначение: Интерфейс для предоставленного API работы с продуктами:
 
-	protected async _get<T>(uri: string, method = EnumApiMethods.GET) {
-		const response = await fetch(this.baseUrl + uri, {
-			...this._options,
-			method,
-		});
-		return this._handleResponse<T>(response);
-	}
+Методы:  
+`getProducts: () => Promise<Product[]>;` - получить список продуктов
+`getProduct: (id: string) => Promise<Product>;` - получить данные по конкретному продукту
+`postOrder: (order: Order) => Promise<OrderResult>;` - запрос на выполнение заказа
 
-	protected async _post<T>(
-		uri: string,
-		data: object,
-		method = EnumApiMethods.POST
-	) {
-		const response = await fetch(this.baseUrl + uri, {
-			...this._options,
-			method,
-			body: JSON.stringify(data),
-		});
-		return this._handleResponse<T>(response);
-	}
-}
-```
-
-Интерфейс для предоставленного API работы с продуктами:
-
-```typescript
-export interface IProductAPI {
-  getProducts: () => Promise<Product[]>;
-  getProduct: (id: string) => Promise<Product>;
-  postOrder: (order: Order) => Promise<OrderResult>;
-}
-```
