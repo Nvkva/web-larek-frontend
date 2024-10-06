@@ -21,7 +21,7 @@ const config = {
     path: path.resolve(__dirname, "dist"),
   },
   devServer: {
-    open: true,
+    open: false,
     host: "localhost",
     watchFiles: ["src/pages/*.html"],
     hot: true
@@ -74,6 +74,9 @@ const config = {
   },
   resolve: {
     extensions: [".tsx", ".ts", ".jsx", ".js", "..."],
+    alias: {
+      '@app': path.resolve(__dirname, 'src')
+    }
   },
   optimization: {
     minimize: true,
