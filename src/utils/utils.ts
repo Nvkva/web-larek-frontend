@@ -1,3 +1,5 @@
+import { ElementChild, ElementProps } from "@app/types/html";
+
 export function pascalToKebab(value: string): string {
     return value.replace(/([a-z0–9])([A-Z])/g, "$1-$2").toLowerCase();
 }
@@ -133,3 +135,35 @@ export function createElement<
     }
     return element;
 }
+
+
+/**
+ * Устанавливает дочерние элементы
+ */
+export function setElementChildren(root: HTMLElement, children: ElementChild) {
+	root.replaceChildren(...(Array.isArray(children) ? children : [children]));
+}
+
+/**
+ * Устанавливает свойства элемента
+ */
+export function setElementProps<T extends HTMLElement>(
+	element: HTMLElement,
+	props: ElementProps<T>
+) {
+	for (const key in props) {
+		const value = props[key];
+		if (isPlainObject(value) && key === 'dataset') {
+			setElementData(element, value);
+		} else {
+			// @ts-expect-error fix indexing later
+			element[key] = isBoolean(value) ? value : String(value);
+		}
+	}
+}
+
+// Для использования элемента или массива элементов в element.replaceChildren
+export function isChildElement(x: unknown): x is ElementChild {
+	return x instanceof HTMLElement || Array.isArray(x);
+}
+
