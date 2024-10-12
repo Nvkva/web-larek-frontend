@@ -1,3 +1,6 @@
+import { IClickable } from "../../base/View";
+import { Product } from "../../model/ProductApi";
+
 export interface ProductData {
   id: string;
   description: string;
@@ -7,10 +10,11 @@ export interface ProductData {
   price: number;
 }
 
-export interface ProductViewSettings {
+export interface ProductViewSettings extends IClickable<Product> {
   image: string;
   title: string;
   description: string;
   category: string;
   price: string;
+  submitButton: string;
 }

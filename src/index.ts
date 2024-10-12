@@ -12,10 +12,10 @@ import { API_URL, CDN_URL, SETTINGS } from './utils/constants';
 
 const api = new ProductAPI(CDN_URL, API_URL);
 const app = new AppStateEmitter(api, SETTINGS.appState, AppStateModel);
-const main = new MainScreen(new MainController(app.model));
+const main = new MainScreen(new MainController(app.model, api));
 const modal = {
 	[AppStateModals.productView]: new ProductViewScreen(
-		new ProductViewController(app.model)
+		new ProductViewController(app.model, api)
 	),
   [AppStateModals.basket]: new ProductViewScreen(
 		new ProductViewController(app.model)
@@ -48,10 +48,3 @@ app.on(AppStateChanges.modal, ({ previous, current }: ModalChange) => {
 		modal[previous].render({ isActive: false });
 	}
 });
-
-app.model
-	.loadProducts()
-	.then(() => {
-		// app.model.restoreState();
-	})
-	.catch((err: string) => console.log(`Error: `, err));

@@ -21,18 +21,15 @@ export enum AppStateChanges {
 // Модель данных приложения
 export interface AppState {
 	products: Map<string, Product>;
-
-	// Заполняемые пользователем данные
 	selectedProduct: Product | null;
 	openedModal: AppStateModals;
+	basket: Product[];
 
-	// Пользовательские действия
-	// selectProduct(id: string): void;
-	loadProducts(): Promise<void>;
-	loadProductItem(id: string): Promise<void>;
-
-	// Методы для работы с модальными окнами
 	openModal(modal: AppStateModals): void;
+	selectProduct(product: Product): void;
+	addProductInBasket(): void;
+	removeProductFormBasket(id: string): void;
+	setProducts(products: Product[]): void;
 }
 
 // Настройки модели данных

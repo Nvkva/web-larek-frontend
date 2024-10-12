@@ -1,7 +1,18 @@
 import { ProductData, ProductViewSettings } from '@app/types/components/view/partial/ProductData';
 import { View } from '../../base/View';
+import { Product } from '@app/types/components/model/ProductApi';
 
 export class ProductView extends View<ProductData, ProductViewSettings> {
+	init(): void {
+		this.ensure(this.settings.submitButton).addEventListener(
+			'click',
+			this.onClickHandler.bind(this),
+		);
+	}
+
+	onClickHandler(event: MouseEvent) {
+		this.settings.onClick({ event });
+	}
 
 	set image(value: string) {
 		this.setValue(this.settings.image, value);

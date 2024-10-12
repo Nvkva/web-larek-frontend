@@ -3,7 +3,7 @@ import { ProductData } from "@app/types/components/view/partial/ProductData";
 import { IView } from "@app/types/components/base/View";
 import { ProductViewData, ProductViewScreenSettings } from "@app/types/components/view/screen/ProductViewData";
 import { SETTINGS } from "@app/utils/constants";
-import { cloneTemplate, createElement } from "@app/utils/utils";
+import { cloneTemplate } from "@app/utils/utils";
 import { ProductView } from "../partial/Product";
 
 export class ProductViewScreen extends ModalScreen<
@@ -14,7 +14,7 @@ export class ProductViewScreen extends ModalScreen<
 	initContent(): IView<ProductData> {
 		return new ProductView(cloneTemplate(SETTINGS.productViewElement), {
 			...SETTINGS.productViewSettings,
-			// onSelect: this.onSelect.bind(this),
+			onClick: this.settings.onSubmit,
 		});
 	}
 

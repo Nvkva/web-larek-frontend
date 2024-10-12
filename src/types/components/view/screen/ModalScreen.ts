@@ -5,5 +5,5 @@ export interface ModalScreenData {
 
 export interface ModalScreenSettings {
 	onClose: () => void;
-	onSubmit: () => void;
+	onSubmit: (data?: any) => void;
 }

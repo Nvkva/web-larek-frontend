@@ -2,23 +2,16 @@ import { AppState, AppStateChanges, AppStateModals, AppStateSettings } from "../
 import { IProductAPI, Product } from "@app/types/components/model/ProductApi";
 
 export class AppStateModel implements AppState {
-	_selectedProduct: string | null = null;
-	products: Map<string, Product> = new Map<string, Product>();
+	public products: Map<string, Product> = new Map<string, Product>();
+	public openedModal: AppStateModals = AppStateModals.none;
+	public modalMessage: string | null = null;
+	public basket: Product[] = [];
+	public selectedProduct: Product | null = null;
 
-  openedModal: AppStateModals = AppStateModals.none;
-	modalMessage: string | null = null;
+	constructor(protected api: IProductAPI, protected settings: AppStateSettings) { }
 
-  constructor(protected api: IProductAPI, protected settings: AppStateSettings) {}
-
-  get selectedProduct(): Product | null {
-		return this._selectedProduct && this.products.has(this._selectedProduct)
-			? this.products.get(this._selectedProduct)
-			: null;
-	}
-
-  async loadProducts(): Promise<void> {
+	setProducts(products: Product[]): void {
 		this.products.clear();
-		const products = await this.api.getProducts();
 		for (const product of products) {
 			this.products.set(product.id, product);
 		}
@@ -29,7 +22,6 @@ export class AppStateModel implements AppState {
 		if (!this.products.has(id)) {
 			throw new Error(`Invalid product id: ${id}`);
 		}
-		this._selectedProduct = id;
 		try {
 			await this.api.getProduct(id);
 		} catch (err: unknown) {
@@ -43,11 +35,23 @@ export class AppStateModel implements AppState {
 		this.notifyChanged(AppStateChanges.productView);
 	}
 
-  protected notifyChanged(changed: AppStateChanges): void {
+	selectProduct(product: Product): void {
+		if (!product) {
+			this.selectedProduct = null;
+			return;
+		}
+		if (product) {
+			this.selectedProduct = product;
+		} else {
+			throw new Error(`Invalid product`);
+		}
+	}
+
+	protected notifyChanged(changed: AppStateChanges): void {
 		this.settings.onChange(changed);
 	}
 
-  // UI methods
+	// UI methods
 	openModal(modal: AppStateModals): void {
 		if (this.openedModal !== modal) {
 			this.openedModal = modal;
@@ -60,19 +64,14 @@ export class AppStateModel implements AppState {
 		this.notifyChanged(AppStateChanges.modalMessage);
 	}
 
-  	// user actions
-	// selectProduct(id: string | null): void {
-	// 	if (!id) {
-	// 		this._selectedProduct = null;
-	// 		this.notifyChanged(AppStateChanges.selectedProduct);
-	// 		return;
-	// 	}
-	// 	if (this.products.has(id)) {
-	// 		this._selectedProduct = id;
-	// 		this.notifyChanged(AppStateChanges.selectedProduct);
-	// 	} else {
-	// 		throw new Error(`Invalid product id: ${id}`);
-	// 	}
-	// }
+	addProductInBasket(): void {
+		if (this.selectedProduct && !this.basket.find(item => item.id === this.selectedProduct.id)) {
+			this.basket.push(this.selectedProduct);
+		}
+	}
+
+	removeProductFormBasket(id: string): void {
+		this.basket = this.basket.filter(item => !(item.id === id));
+	}
 }
 

@@ -46,5 +46,6 @@ export interface Settings {
 		description: string,
 		category: string,
 		price: string,
+		submitButton: string,
 	},
 }

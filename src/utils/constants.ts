@@ -49,5 +49,6 @@ export const SETTINGS: Settings = {
 		description: '.card__text',
 		category: '.card__category',
 		price: '.card__price',
+    submitButton: '.card__button'
 	},
 };
