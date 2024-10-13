@@ -1,3 +1,4 @@
+import { BasketProductData } from "@app/types/components/view/partial/BasketProduct";
 import { AppState, AppStateChanges, AppStateModals, AppStateSettings } from "../../types/components/model/AppState";
 import { IProductAPI, Product } from "@app/types/components/model/ProductApi";
 
@@ -5,7 +6,7 @@ export class AppStateModel implements AppState {
 	public products: Map<string, Product> = new Map<string, Product>();
 	public openedModal: AppStateModals = AppStateModals.none;
 	public modalMessage: string | null = null;
-	public basket: Product[] = [];
+	public basket: Map<string, BasketProductData> = new Map<string, BasketProductData>();
 	public selectedProduct: Product | null = null;
 
 	constructor(protected api: IProductAPI, protected settings: AppStateSettings) { }
@@ -65,13 +66,19 @@ export class AppStateModel implements AppState {
 	}
 
 	addProductInBasket(): void {
-		if (this.selectedProduct && !this.basket.find(item => item.id === this.selectedProduct.id)) {
-			this.basket.push(this.selectedProduct);
+		if (this.selectedProduct && !this.basket.has(this.selectedProduct.id)) {
+			const index = this.basket.size + 1;
+			this.basket.set(this.selectedProduct.id, { index, ...this.selectedProduct });
 		}
+		this.notifyChanged(AppStateChanges.basket);
 	}
 
 	removeProductFormBasket(id: string): void {
-		this.basket = this.basket.filter(item => !(item.id === id));
+		if (!this.basket.has(id)) {
+			throw new Error(`Invalid ticket key: ${id}`);
+		}
+		this.basket.delete(id);
+		this.notifyChanged(AppStateChanges.basket);
 	}
 }
 

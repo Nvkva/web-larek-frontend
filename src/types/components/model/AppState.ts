@@ -1,4 +1,5 @@
 import { IProductAPI, Product } from "@app/types/components/model/ProductApi";
+import { BasketProductData } from "../view/partial/BasketProduct";
 
 export enum AppStateModals {
 	productView = 'modal:productView',
@@ -23,7 +24,7 @@ export interface AppState {
 	products: Map<string, Product>;
 	selectedProduct: Product | null;
 	openedModal: AppStateModals;
-	basket: Product[];
+	basket: Map<string, BasketProductData>;
 
 	openModal(modal: AppStateModals): void;
 	selectProduct(product: Product): void;

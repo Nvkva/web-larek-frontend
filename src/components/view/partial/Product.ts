@@ -1,6 +1,5 @@
 import { ProductData, ProductViewSettings } from '@app/types/components/view/partial/ProductData';
 import { View } from '../../base/View';
-import { Product } from '@app/types/components/model/ProductApi';
 
 export class ProductView extends View<ProductData, ProductViewSettings> {
 	init(): void {

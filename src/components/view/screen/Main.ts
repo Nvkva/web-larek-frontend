@@ -40,4 +40,8 @@ export class MainScreen extends Screen<MainData, MainSettings> {
   protected onOpenProductHandler({ item }: IClickableEvent<string>) {
 		this.settings.onOpenProduct(item);
 	}
+
+	set counter(value: number) {
+		this.page.counter = value;
+	}
 }

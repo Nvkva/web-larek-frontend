@@ -48,4 +48,19 @@ export interface Settings {
 		price: string,
 		submitButton: string,
 	},
+	basketTemplate: string;
+	basketModal: {
+		submitLabel: string;
+		submitButton: string;
+		total: string;
+		itemClass: string;
+	};
+	basketCardsContainerSelector: string;
+	basketElementTemplate: string;
+  basketElementSettings: {
+		index: string;
+		title: string;
+		price: string;
+		deleteButton: string;
+	};
 }

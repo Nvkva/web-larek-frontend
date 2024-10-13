@@ -1,11 +1,13 @@
+import { IClickableEvent } from "../../base/View";
+import { BasketProductData } from "../partial/BasketProduct";
 import { ProductData } from "../partial/ProductData";
 import { ModalScreenData, ModalScreenSettings } from "./ModalScreen";
 
 export interface BasketData extends ModalScreenData {
-	products: ProductData[];
-	total: string;
+	products: BasketProductData[];
+	total: number;
 }
 
 export interface BasketSettings extends ModalScreenSettings {
-	onRemove: (id: string) => void;
+	onRemove: (args: IClickableEvent<BasketProductData>) => void;
 }

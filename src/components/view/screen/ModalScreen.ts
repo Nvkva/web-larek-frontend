@@ -28,7 +28,7 @@ export abstract class ModalScreen<
 			SETTINGS.modal,
 			this.settings.onSubmit
 		);
-
+		
 		this.modal = this.getModalView(
 			{
 				contentView: this.initContent(),
