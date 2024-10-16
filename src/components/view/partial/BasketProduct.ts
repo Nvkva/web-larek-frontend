@@ -21,7 +21,7 @@ export class BasketProductView extends View<BasketProductData, BasketProductSett
 	}
 
 	set price(value: number | null) {
-		this.setValue(this.settings.price, String(value ?? SETTINGS.nullPriceLabel));
+		this.setValue(this.settings.price, value ? `${String(value)} синапсов` : SETTINGS.nullPriceLabel);
 	}
 
 	set index(value: number) {

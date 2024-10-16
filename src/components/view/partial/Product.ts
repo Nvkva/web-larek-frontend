@@ -37,7 +37,7 @@ export class ProductView extends View<ProductData, ProductViewSettings> {
 		})
 	}
 
-	set price(value: string | null) {
-		this.setValue(this.settings.price, String(value ?? SETTINGS.nullPriceLabel));
+	set price(value: number | null) {
+		this.setValue(this.settings.price, value ? `${String(value)} синапсов` : SETTINGS.nullPriceLabel);
 	}
 }
