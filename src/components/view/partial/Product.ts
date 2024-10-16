@@ -1,5 +1,6 @@
 import { ProductData, ProductViewSettings } from '@app/types/components/view/partial/ProductData';
 import { View } from '../../base/View';
+import { SETTINGS } from '@app/utils/constants';
 
 export class ProductView extends View<ProductData, ProductViewSettings> {
 	init(): void {
@@ -29,7 +30,7 @@ export class ProductView extends View<ProductData, ProductViewSettings> {
 		this.setValue(this.settings.category, value);
 	}
 
-	set price(value: string) {
-		this.setValue(this.settings.price, String(value));
+	set price(value: string | null) {
+		this.setValue(this.settings.price, String(value ?? SETTINGS.nullPriceLabel));
 	}
 }

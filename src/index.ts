@@ -52,12 +52,10 @@ app.on(AppStateModals.productView, () => {
 });
 
 app.on(AppStateChanges.basket, () => {
-	console.log('asdas');
-
 	main.counter = app.model.basket.size;
 	modal[AppStateModals.basket].products = Array.from(app.model.basket.values());
 	modal[AppStateModals.basket].isDisabled = app.model.basket.size === 0;
-	modal[AppStateModals.basket].total = Array.from(app.model.basket.values()).reduce((acc, item) => acc + Number(item.price), 0);
+	modal[AppStateModals.basket].total = app.model.total;
 });
 
 app.on(AppStateModals.basket, () => {
@@ -65,6 +63,6 @@ app.on(AppStateModals.basket, () => {
 		products: Array.from(app.model.basket.values()),
 		isDisabled: app.model.basket.size === 0,
 		isActive: true,
-		total: Array.from(app.model.basket.values()).reduce((acc, item) => acc + Number(item.price), 0)
+		total: app.model.total,
 	});
 });

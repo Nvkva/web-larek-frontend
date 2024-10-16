@@ -1,5 +1,6 @@
 import { CardData, CardSettings } from '@app/types/components/view/partial/Card';
 import { View } from '../../base/View';
+import { SETTINGS } from '@app/utils/constants';
 
 
 /**
@@ -27,5 +28,9 @@ export class CardView extends View<CardData, CardSettings> {
 		this.setValue<HTMLImageElement>(this.settings.image, {
 			alt: value,
 		});
+	}
+
+	set price(value: number | null) {
+		this.setValue(this.settings.price, value ? `${String(value)} синапсов` : SETTINGS.nullPriceLabel);
 	}
 }

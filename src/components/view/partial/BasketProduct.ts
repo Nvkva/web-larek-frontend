@@ -1,5 +1,6 @@
 import { View } from "@app/components/base/View";
 import { BasketProductData, BasketProductSettings } from "@app/types/components/view/partial/BasketProduct";
+import { SETTINGS } from "@app/utils/constants";
 
 export class BasketProductView extends View<BasketProductData, BasketProductSettings> {
 	protected _item!: BasketProductData;
@@ -19,8 +20,8 @@ export class BasketProductView extends View<BasketProductData, BasketProductSett
 		this.setValue(this.settings.title, value);
 	}
 
-	set price(value: number) {
-		this.setValue(this.settings.price, String(value));
+	set price(value: number | null) {
+		this.setValue(this.settings.price, String(value ?? SETTINGS.nullPriceLabel));
 	}
 
 	set index(value: number) {

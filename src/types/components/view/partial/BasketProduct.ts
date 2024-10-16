@@ -7,7 +7,7 @@ export interface BasketViewData {
 export interface BasketProductData {
   id: string;
   title: string;
-  price: number;
+  price: number | null;
   index: number;
 }
 

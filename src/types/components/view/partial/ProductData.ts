@@ -7,7 +7,7 @@ export interface ProductData {
   image: string;
   title: string;
   category: string;
-  price: number;
+  price: number | null;
 }
 
 export interface ProductViewSettings extends IClickable<Product> {

@@ -25,6 +25,7 @@ export interface AppState {
 	selectedProduct: Product | null;
 	openedModal: AppStateModals;
 	basket: Map<string, BasketProductData>;
+	total: string;
 
 	openModal(modal: AppStateModals): void;
 	selectProduct(product: Product): void;

@@ -25,7 +25,7 @@ export class BasketViewScreen extends ModalScreen<
     this.submitButton.disabled = !products.length;
   }
 
-  set total(total: number) {
-    this.setValue(SETTINGS.basketModal.total, `${String(total)} синапсов`)
+  set total(total: string) {
+    this.setValue(SETTINGS.basketModal.total, total === SETTINGS.nullPriceLabel ? total : `${total} cинапсов`)
   }
 }

@@ -1,6 +1,7 @@
 import { BasketProductData } from "@app/types/components/view/partial/BasketProduct";
 import { AppState, AppStateChanges, AppStateModals, AppStateSettings } from "../../types/components/model/AppState";
 import { IProductAPI, Product } from "@app/types/components/model/ProductApi";
+import { SETTINGS } from "@app/utils/constants";
 
 export class AppStateModel implements AppState {
 	public products: Map<string, Product> = new Map<string, Product>();
@@ -8,6 +9,17 @@ export class AppStateModel implements AppState {
 	public modalMessage: string | null = null;
 	public basket: Map<string, BasketProductData> = new Map<string, BasketProductData>();
 	public selectedProduct: Product | null = null;
+
+	public get total(): string {
+		const basketValues: BasketProductData[] = Array.from(this.basket.values());
+		let totalValue: string;
+		if (basketValues.find(item => item.price === null)) {
+			totalValue = SETTINGS.nullPriceLabel;
+		} else {
+			totalValue = String(basketValues.reduce((acc, item) => acc + Number(item.price), 0));
+		}
+		return totalValue;
+	}
 
 	constructor(protected api: IProductAPI, protected settings: AppStateSettings) { }
 

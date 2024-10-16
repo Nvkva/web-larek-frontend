@@ -5,7 +5,7 @@ import { ModalScreenData, ModalScreenSettings } from "./ModalScreen";
 
 export interface BasketData extends ModalScreenData {
 	products: BasketProductData[];
-	total: number;
+	total: string;
 }
 
 export interface BasketSettings extends ModalScreenSettings {

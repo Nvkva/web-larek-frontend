@@ -4,6 +4,8 @@ export interface CardData {
 	id: string;
 	image: string;
 	title: string;
+	price: number | null;
+	category: string;
 }
 
 export interface CardSettings extends IClickable<string> {
