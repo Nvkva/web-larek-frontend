@@ -15,7 +15,9 @@ export class ProductView extends View<ProductData, ProductViewSettings> {
 	}
 
 	set image(value: string) {
-		this.setValue(this.settings.image, value);
+		this.setValue<HTMLImageElement>(this.settings.image, {
+			src: value,
+		});
 	}
 
 	set title(value: string) {

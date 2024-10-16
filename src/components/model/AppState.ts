@@ -90,6 +90,12 @@ export class AppStateModel implements AppState {
 			throw new Error(`Invalid ticket key: ${id}`);
 		}
 		this.basket.delete(id);
+
+		let index = 1;
+		this.basket.forEach(item => {
+			this.basket.set(item.id, { ...item, index });
+			index++;
+		})
 		this.notifyChanged(AppStateChanges.basket);
 	}
 }

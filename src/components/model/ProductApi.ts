@@ -13,7 +13,7 @@ export class ProductAPI extends Api implements IProductAPI {
 		const data = await this._get<Product>(
 			`/product/${id}`
 		);
-		return data;
+		return { ...data, image: this.cdn + data.image };
 	}
 
 	async getProducts(): Promise<Product[]> {
