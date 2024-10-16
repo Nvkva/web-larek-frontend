@@ -1,6 +1,7 @@
 import { ProductData, ProductViewSettings } from '@app/types/components/view/partial/ProductData';
 import { View } from '../../base/View';
 import { SETTINGS } from '@app/utils/constants';
+import { categorySelectorClassMap } from '@app/types/components/model/ProductApi';
 
 export class ProductView extends View<ProductData, ProductViewSettings> {
 	init(): void {
@@ -24,12 +25,16 @@ export class ProductView extends View<ProductData, ProductViewSettings> {
 		this.setValue(this.settings.title, value);
 	}
 
-  set description(value: string) {
+	set description(value: string) {
 		this.setValue(this.settings.description, value);
 	}
 
 	set category(value: string) {
 		this.setValue(this.settings.category, value);
+		this.setValue(this.settings.category, {
+			classList: categorySelectorClassMap.get(value) ?
+				`${SETTINGS.categoryClasses.base} ${categorySelectorClassMap.get(value)}` : ''
+		})
 	}
 
 	set price(value: string | null) {

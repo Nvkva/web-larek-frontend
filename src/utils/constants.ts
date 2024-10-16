@@ -9,9 +9,16 @@ export const SETTINGS: Settings = {
     activeItemClass: 'gallery__item_active',
     itemClass: 'gallery__item',
   },
+  categoryClasses: {
+    base: 'card__category',
+    soft: 'card__category_soft',
+    hard: 'card__category_hard',
+    other: 'card__category_other',
+    additional: 'card__category_additional',
+    button: 'card__category_button',
+  },
   cardSettings: {
     category: '.card__category',
-    categorySoft: '.card__category_soft',
     title: '.card__title',
     image: '.card__image',
     price: '.card__price',

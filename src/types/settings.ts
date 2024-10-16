@@ -6,9 +6,16 @@ export interface Settings {
 		activeItemClass: string;
 		itemClass: string;
 	};
+	categoryClasses: {
+		base: string,
+    soft: string,
+    hard: string,
+    other: string,
+    additional: string,
+		button: string,
+  },
 	cardSettings: {
 		category: string,
-		categorySoft: string,
 		title: string,
 		image: string,
 		price: string,
