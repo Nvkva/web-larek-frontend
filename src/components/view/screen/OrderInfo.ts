@@ -21,4 +21,9 @@ export class OrderInfoScreen extends ModalScreen<
 	protected onFormChange({ value }: IChangeableEvent<OrderData>) {
 		this.settings.onChange(value);
 	}
+
+  set data(data: OrderData) {
+    this.submitButton.disabled = Boolean(data.address.length);
+    this.modal.content = data;
+  }
 }

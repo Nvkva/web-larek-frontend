@@ -71,6 +71,12 @@ app.on(AppStateModals.basket, () => {
 
 app.on(AppStateModals.order, () => {
 	modal[AppStateModals.order].render({
+		data: { address: '', selectedPayMethod: 'card' },
 		isActive: true,
+		isDisabled: !app.model.orderInfo?.address,
 	});
+});
+
+app.on(AppStateChanges.order, () => {
+	modal[AppStateModals.order].data = app.model.orderInfo;
 });

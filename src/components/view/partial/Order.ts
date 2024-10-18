@@ -2,48 +2,63 @@ import { View } from '../../base/View';
 import { OrderData, OrderViewSettings, PayMethod } from '@app/types/components/view/partial/OrderData';
 
 export class OrderInfoView extends View<OrderData, OrderViewSettings> {
-  private currentPayMethod: PayMethod;
+  private currentPayMethod: PayMethod = 'card';
+  private cashButton: HTMLElement;
+  private cardButton: HTMLElement;
 
   init() {
-		this.element.addEventListener('submit', this.onSubmitHandler.bind(this));
-		this.element.addEventListener('change', this.onSubmitHandler.bind(this));
+    this.element.addEventListener('submit', this.onSubmitHandler.bind(this));
+    this.element.addEventListener('change', this.onSubmitHandler.bind(this));
 
-    this.ensure(this.settings.cashButton).addEventListener(
-			'click',
-			this.changeSelectedPaymentMethod.bind(this),
-		);
 
-    this.ensure(this.settings.cardButton).addEventListener(
-			'click',
-			this.changeSelectedPaymentMethod.bind(this),
-		);
-	}
+    this.cashButton = this.ensure(this.settings.cashButton);
+    this.cashButton.addEventListener(
+      'click',
+      this.changeSelectedPaymentMethod.bind(this),
+    );
 
-	onSubmitHandler(event: SubmitEvent) {
-		event.preventDefault();
-		this.settings.onChange({ event, value: this.data });
-		return false;
-	}
+    this.cardButton = this.ensure(this.settings.cardButton);
+    this.cardButton.addEventListener(
+      'click',
+      this.changeSelectedPaymentMethod.bind(this),
+    );
 
-  private changeSelectedPaymentMethod(this: HTMLElement, ev: MouseEvent) {
-    
+    this.cardButton.classList.add('button_alt-active');
   }
 
-	set address(value: string) {
-		this.setValue<HTMLInputElement>(this.settings.address, {
-			value,
-		});
-	}
+  onSubmitHandler(event: SubmitEvent) {
+    event.preventDefault();
+    this.settings.onChange({ event, value: this.data });
+    return false;
+  }
 
-	set selectedPayMethod(value: PayMethod) {
+  private changeSelectedPaymentMethod(element: PointerEvent) {
+    if ((element.target as HTMLButtonElement).name === 'cash') {
+      this.selectedPayMethod = 'cash';
+      this.cashButton.classList.add('button_alt-active');
+      this.cardButton.classList.remove('button_alt-active');
+    } else if ((element.target as HTMLButtonElement).name === 'card') {
+      this.selectedPayMethod = 'card';
+      this.cashButton.classList.remove('button_alt-active');
+      this.cardButton.classList.add('button_alt-active');
+    }
+    this.settings.onChange({ value: this.data });
+  }
+
+  set address(value: string) {
+    this.setValue<HTMLInputElement>(this.settings.address, {
+      value,
+    });
+  }
+
+  set selectedPayMethod(value: PayMethod) {
     this.currentPayMethod = value;
-		
-	}
+  }
 
-	get data() {
-		return {
-			address: this.ensure<HTMLInputElement>(this.settings.address).value,
-			selectedPayMethod: this.currentPayMethod,
-		};
-	}
+  get data() {
+    return {
+      address: this.ensure<HTMLInputElement>(this.settings.address).value,
+      selectedPayMethod: this.currentPayMethod,
+    };
+  }
 }

@@ -78,7 +78,7 @@ export const SETTINGS: Settings = {
   orderSettings: {
 		cardButton: 'button[name=card]',
 		cashButton: 'button[name=cash]',
-		address: 'input[name=phone]',
+		address: 'input[name=address]',
     submitButton: '.order__button',
 	},
 };

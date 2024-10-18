@@ -22,7 +22,7 @@ export interface IClickable<T> {
 }
 
 // Настройки для изменяемого отображения (формы, переключатели...)
-export type IChangeableEvent<T> = { event: Event; value?: T };
+export type IChangeableEvent<T> = { event?: Event; value?: T };
 export interface IChangeable<T> {
 	onChange: (args: IChangeableEvent<T>) => void;
 }

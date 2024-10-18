@@ -1,5 +1,6 @@
 import { IProductAPI, Product } from "@app/types/components/model/ProductApi";
 import { BasketProductData } from "../view/partial/BasketProduct";
+import { OrderData } from "../view/partial/OrderData";
 
 export enum AppStateModals {
 	productView = 'modal:productView',
@@ -27,12 +28,14 @@ export interface AppState {
 	openedModal: AppStateModals;
 	basket: Map<string, BasketProductData>;
 	total: string;
+	orderInfo: OrderData | null;
 
 	openModal(modal: AppStateModals): void;
 	selectProduct(product: Product): void;
 	addProductInBasket(): void;
 	removeProductFormBasket(id: string): void;
 	setProducts(products: Product[]): void;
+	fillOrderData(value: OrderData): void;
 }
 
 // Настройки модели данных

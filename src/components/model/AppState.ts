@@ -2,6 +2,7 @@ import { BasketProductData } from "@app/types/components/view/partial/BasketProd
 import { AppState, AppStateChanges, AppStateModals, AppStateSettings } from "../../types/components/model/AppState";
 import { IProductAPI, Product } from "@app/types/components/model/ProductApi";
 import { SETTINGS } from "@app/utils/constants";
+import { OrderData } from "@app/types/components/view/partial/OrderData";
 
 export class AppStateModel implements AppState {
 	public products: Map<string, Product> = new Map<string, Product>();
@@ -20,6 +21,12 @@ export class AppStateModel implements AppState {
 		}
 		return totalValue;
 	}
+
+	public get orderInfo(): OrderData | null {
+		return this.orderData;
+	}
+
+	private orderData: OrderData | null = null;
 
 	constructor(protected api: IProductAPI, protected settings: AppStateSettings) { }
 
@@ -97,6 +104,11 @@ export class AppStateModel implements AppState {
 			index++;
 		})
 		this.notifyChanged(AppStateChanges.basket);
+	}
+
+	fillOrderData(value: OrderData): void {
+		this.orderData = value;
+		this.notifyChanged(AppStateChanges.order);
 	}
 }
 
