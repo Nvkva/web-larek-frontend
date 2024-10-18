@@ -22,7 +22,6 @@ export class BasketViewScreen extends ModalScreen<
     this.modal.content = {
       products: products,
     };
-    this.submitButton.disabled = !products.length;
   }
 
   set total(total: string) {

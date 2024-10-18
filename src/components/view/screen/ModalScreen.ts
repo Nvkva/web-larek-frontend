@@ -3,9 +3,7 @@ import { ModalScreenSettings } from "@app/types/components/view/screen/ModalScre
 import { ModalView } from "../common/Modal";
 import { IView } from "@app/types/components/base/View";
 import { SETTINGS } from "@app/utils/constants";
-import { ElementCreator } from "@app/types/html";
-import { cloneTemplate, ensureElement } from "@app/utils/utils";
-import { ButtonView } from "../common/Button";
+import { ensureElement } from "@app/utils/utils";
 
 /**
  * Общая логика и структура модальных окон
@@ -17,18 +15,11 @@ export abstract class ModalScreen<
 > extends Screen<C, S> {
 	// модальное окно
 	protected declare modal: ModalView<M>;
-	// кнопка подтверждения
-	protected declare submitButton: HTMLButtonElement;
 
 	abstract initContent(): IView<M>;
 
 	// Переопределенный init() для инициализации модального окна
 	protected init() {
-		this.submitButton = this.getSubmitButton(
-			SETTINGS.modal,
-			this.settings.onSubmit
-		);
-		
 		this.modal = this.getModalView(
 			{
 				contentView: this.initContent(),
@@ -40,17 +31,6 @@ export abstract class ModalScreen<
 	}
 
 	// Вспомогательные методы
-
-	protected getSubmitButton(
-		settings: { submitLabel: string; submitSettings: ElementCreator },
-		onClick: () => void
-	) {
-		return ButtonView.make<HTMLButtonElement>(
-			settings.submitLabel,
-			settings.submitSettings,
-			onClick
-		);
-	}
 
 	protected getModalView(
 		settings: { contentView: IView<M> },
@@ -74,6 +54,6 @@ export abstract class ModalScreen<
 	}
 
 	set isDisabled(state: boolean) {
-		this.submitButton.disabled = state;
+		// this.submitButton.disabled = state;
 	}
 }

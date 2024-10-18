@@ -23,7 +23,6 @@ export class OrderInfoScreen extends ModalScreen<
 	}
 
   set data(data: OrderData) {
-    this.submitButton.disabled = Boolean(data.address.length);
     this.modal.content = data;
   }
 }
