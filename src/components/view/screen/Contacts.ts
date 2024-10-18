@@ -18,6 +18,7 @@ export class ContactsScreen extends ModalScreen<
     return new ContactsView(cloneTemplate(SETTINGS.contactsTemplate), {
       ...SETTINGS.contactsSettings,
       onChange: this.onFormChange.bind(this),
+      onSubmit: this.settings.onSubmit.bind(this),
     });
   }
 

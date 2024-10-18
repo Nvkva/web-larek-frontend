@@ -87,4 +87,9 @@ export const SETTINGS: Settings = {
 		phone: 'input[name=phone]',
     submitButton: '.contacts__button',
 	},
+  successTemplate: '#success',
+  successSettings: {
+		description: '.order-success__description',
+    submitButton: '.order-success__close',
+	},
 };

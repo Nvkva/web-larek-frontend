@@ -6,8 +6,12 @@ export class ContactsView extends View<ContactsData, ContactsViewSettings> {
 
   init() {
     this.submitButton = this.ensure(this.settings.submitButton);
+    this.submitButton.addEventListener(
+      'click',
+      this.settings.onSubmit.bind(this),
+    )
 
-    this.element.addEventListener('submit', this.onSubmitHandler.bind(this));
+    this.element.addEventListener('submit', this.settings.onSubmit.bind(this),);
     this.element.addEventListener('change', this.onSubmitHandler.bind(this));
   }
 
@@ -19,7 +23,6 @@ export class ContactsView extends View<ContactsData, ContactsViewSettings> {
   }
 
   set email(value: string) {
-    console.log('value :>> ', value);
     this.setValue<HTMLInputElement>(this.settings.email, {
       value,
     });

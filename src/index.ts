@@ -3,6 +3,7 @@ import { ContactsController } from './components/controller/Contacts';
 import { MainController } from './components/controller/Main';
 import { OrderController } from './components/controller/Order';
 import { ProductViewController } from './components/controller/ProductViewController';
+import { SuccessController } from './components/controller/Success';
 import { AppStateModel } from './components/model/AppState';
 import { AppStateEmitter } from './components/model/AppStateEmitter';
 import { ProductAPI } from './components/model/ProductApi';
@@ -11,6 +12,7 @@ import { ContactsScreen } from './components/view/screen/Contacts';
 import { MainScreen } from './components/view/screen/Main';
 import { OrderInfoScreen } from './components/view/screen/OrderInfo';
 import { ProductViewScreen } from './components/view/screen/ProductView';
+import { SuccessScreen } from './components/view/screen/Success';
 import './scss/styles.scss';
 import { AppStateChanges, AppStateModals } from './types/components/model/AppState';
 import { ModalChange } from './types/components/model/AppStateEmitter';
@@ -32,8 +34,8 @@ const modal = {
 	[AppStateModals.contacts]: new ContactsScreen(
 		new ContactsController(app.model)
 	),
-	[AppStateModals.success]: new ProductViewScreen(
-		new ProductViewController(app.model)
+	[AppStateModals.success]: new SuccessScreen(
+		new SuccessController(app.model)
 	),
 };
 
@@ -93,4 +95,11 @@ app.on(AppStateModals.contacts, () => {
 
 app.on(AppStateChanges.contacts, () => {
 	modal[AppStateModals.contacts].data = app.model.contactsInfo;
+});
+
+app.on(AppStateModals.success, () => {
+	modal[AppStateModals.success].render({
+		data: { totalDescription: app.model.total},
+		isActive: true,
+	});
 });

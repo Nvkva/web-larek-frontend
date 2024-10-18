@@ -1,7 +1,9 @@
-import { ModalScreenSettings } from "./ModalScreen";
+import { SuccessData } from "../partial/Success";
+import { ModalScreenData, ModalScreenSettings } from "./ModalScreen";
 
-export interface SuccessData {
+export interface SuccessScreenData extends ModalScreenData {
+  data: SuccessData;
 }
 
-export interface SuccessSettings extends ModalScreenSettings {
+export interface SuccessScreenSettings extends ModalScreenSettings {
 }

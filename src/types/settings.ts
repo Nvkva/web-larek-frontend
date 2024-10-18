@@ -84,4 +84,9 @@ export interface Settings {
 		phone: string;
     submitButton: string;
 	};
+	successTemplate: string,
+  successSettings: {
+		description: string,
+    submitButton: string,
+	},
 }
