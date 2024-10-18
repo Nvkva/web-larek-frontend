@@ -5,8 +5,11 @@ export class OrderInfoView extends View<OrderData, OrderViewSettings> {
   private currentPayMethod: PayMethod = 'card';
   private cashButton: HTMLElement;
   private cardButton: HTMLElement;
+  private submitButton: HTMLElement;
 
   init() {
+    this.submitButton = this.ensure(this.settings.submitButton);
+
     this.element.addEventListener('submit', this.onSubmitHandler.bind(this));
     this.element.addEventListener('change', this.onSubmitHandler.bind(this));
 
@@ -29,6 +32,7 @@ export class OrderInfoView extends View<OrderData, OrderViewSettings> {
   onSubmitHandler(event: SubmitEvent) {
     event.preventDefault();
     this.settings.onChange({ event, value: this.data });
+    (this.submitButton as HTMLButtonElement).disabled = !Boolean(this.data.address.length);
     return false;
   }
 

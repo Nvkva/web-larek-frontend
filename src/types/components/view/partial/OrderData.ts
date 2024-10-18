@@ -11,4 +11,5 @@ export interface OrderViewSettings extends IChangeable<OrderData> {
   cardButton: string;
   cashButton: string;
   address: string;
+  submitButton: string;
 }
