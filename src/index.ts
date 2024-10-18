@@ -1,4 +1,5 @@
 import { BasketController } from './components/controller/Basket';
+import { ContactsController } from './components/controller/Contacts';
 import { MainController } from './components/controller/Main';
 import { OrderController } from './components/controller/Order';
 import { ProductViewController } from './components/controller/ProductViewController';
@@ -6,6 +7,7 @@ import { AppStateModel } from './components/model/AppState';
 import { AppStateEmitter } from './components/model/AppStateEmitter';
 import { ProductAPI } from './components/model/ProductApi';
 import { BasketViewScreen } from './components/view/screen/Basket';
+import { ContactsScreen } from './components/view/screen/Contacts';
 import { MainScreen } from './components/view/screen/Main';
 import { OrderInfoScreen } from './components/view/screen/OrderInfo';
 import { ProductViewScreen } from './components/view/screen/ProductView';
@@ -27,8 +29,8 @@ const modal = {
 	[AppStateModals.order]: new OrderInfoScreen(
 		new OrderController(app.model)
 	),
-	[AppStateModals.contacts]: new ProductViewScreen(
-		new ProductViewController(app.model)
+	[AppStateModals.contacts]: new ContactsScreen(
+		new ContactsController(app.model)
 	),
 	[AppStateModals.success]: new ProductViewScreen(
 		new ProductViewController(app.model)
@@ -79,4 +81,16 @@ app.on(AppStateModals.order, () => {
 
 app.on(AppStateChanges.order, () => {
 	modal[AppStateModals.order].data = app.model.orderInfo;
+});
+
+app.on(AppStateModals.contacts, () => {
+	modal[AppStateModals.contacts].render({
+		data: { email: '', phone: '' },
+		isActive: true,
+		isDisabled: !app.model.contactsInfo?.email && !app.model.contactsInfo?.phone,
+	});
+});
+
+app.on(AppStateChanges.contacts, () => {
+	modal[AppStateModals.contacts].data = app.model.contactsInfo;
 });

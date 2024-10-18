@@ -81,4 +81,10 @@ export const SETTINGS: Settings = {
 		address: 'input[name=address]',
     submitButton: '.order__button',
 	},
+  contactsTemplate: '#contacts',
+  contactsSettings: {
+		email: 'input[name=email]',
+		phone: 'input[name=phone]',
+    submitButton: '.contacts__button',
+	},
 };

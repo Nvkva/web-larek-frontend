@@ -15,6 +15,7 @@ export class OrderInfoScreen extends ModalScreen<
 		return new OrderInfoView(cloneTemplate(SETTINGS.orderTemplate), {
 			...SETTINGS.orderSettings,
 			onChange: this.onFormChange.bind(this),
+      onSubmit: this.settings.onSubmit.bind(this),
 		});
 	}
 

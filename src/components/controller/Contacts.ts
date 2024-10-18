@@ -2,14 +2,14 @@ import { Controller } from '@app/components/base/Controller';
 import { AppState, AppStateModals } from '@app/types/components/model/AppState';
 import { OrderData } from '@app/types/components/view/partial/OrderData';
 
-export class OrderController extends Controller<AppState> {
+export class ContactsController extends Controller<AppState> {
   onSubmit = () => {
-    this.model.openModal(AppStateModals.contacts);
+    this.model.openModal(AppStateModals.success);
   };
   onClose = () => {
     this.model.openModal(AppStateModals.none);
   };
-  onChange = (value: OrderData) => {
-    this.model.fillOrderData(value);
+  onChange = (value: any) => {
+    // this.model.fillOrderData(value);
   };
 }

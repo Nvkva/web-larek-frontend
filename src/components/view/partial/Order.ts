@@ -9,9 +9,10 @@ export class OrderInfoView extends View<OrderData, OrderViewSettings> {
 
   init() {
     this.submitButton = this.ensure(this.settings.submitButton);
+    this.submitButton.addEventListener('click', this.settings.onSubmit.bind(this));
 
-    this.element.addEventListener('submit', this.onSubmitHandler.bind(this));
-    this.element.addEventListener('change', this.onSubmitHandler.bind(this));
+    this.element.addEventListener('submit', this.settings.onSubmit.bind(this));
+    this.element.addEventListener('change', this.onChangeHandler.bind(this));
 
 
     this.cashButton = this.ensure(this.settings.cashButton);
@@ -29,12 +30,16 @@ export class OrderInfoView extends View<OrderData, OrderViewSettings> {
     this.cardButton.classList.add('button_alt-active');
   }
 
-  onSubmitHandler(event: SubmitEvent) {
+  onChangeHandler(event: SubmitEvent) {
     event.preventDefault();
     this.settings.onChange({ event, value: this.data });
     (this.submitButton as HTMLButtonElement).disabled = !Boolean(this.data.address.length);
     return false;
   }
+
+  onClickHandler(event: MouseEvent) {
+		this.settings.onSubmit({event});
+	}
 
   private changeSelectedPaymentMethod(element: PointerEvent) {
     if ((element.target as HTMLButtonElement).name === 'cash') {

@@ -3,6 +3,7 @@ import { AppState, AppStateChanges, AppStateModals, AppStateSettings } from "../
 import { IProductAPI, Product } from "@app/types/components/model/ProductApi";
 import { SETTINGS } from "@app/utils/constants";
 import { OrderData } from "@app/types/components/view/partial/OrderData";
+import { ContactsData } from "@app/types/components/view/partial/ContactsData";
 
 export class AppStateModel implements AppState {
 	public products: Map<string, Product> = new Map<string, Product>();
@@ -27,6 +28,12 @@ export class AppStateModel implements AppState {
 	}
 
 	private orderData: OrderData | null = null;
+
+	public get contactsInfo(): ContactsData | null {
+		return this.contactsData;
+	}
+
+	private contactsData: ContactsData | null = null;
 
 	constructor(protected api: IProductAPI, protected settings: AppStateSettings) { }
 
@@ -109,6 +116,11 @@ export class AppStateModel implements AppState {
 	fillOrderData(value: OrderData): void {
 		this.orderData = value;
 		this.notifyChanged(AppStateChanges.order);
+	}
+
+	fillContactsData(value: ContactsData): void {
+		this.contactsData = value;
+		this.notifyChanged(AppStateChanges.contacts);
 	}
 }
 

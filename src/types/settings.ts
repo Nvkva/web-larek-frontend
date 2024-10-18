@@ -78,4 +78,10 @@ export interface Settings {
 		address: string;
 		submitButton: string;
 	};
+	contactsTemplate: string;
+  contactsSettings: {
+		email: string;
+		phone: string;
+    submitButton: string;
+	};
 }

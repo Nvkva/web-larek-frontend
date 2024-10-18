@@ -1,4 +1,4 @@
-import { IChangeable, IClickable } from "../../base/View";
+import { IChangeable, IClickable, IClickableEvent } from "../../base/View";
 
 export type PayMethod = 'card' | 'cash'; 
 
@@ -12,4 +12,5 @@ export interface OrderViewSettings extends IChangeable<OrderData> {
   cashButton: string;
   address: string;
   submitButton: string;
+  onSubmit: (args: IClickableEvent<MouseEvent>) => void;
 }
