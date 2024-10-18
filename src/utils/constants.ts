@@ -73,5 +73,12 @@ export const SETTINGS: Settings = {
     price: ".card__price",
     deleteButton: ".basket__item-delete",
   },
-  basketCardsContainerSelector: ".basket__list"
+  basketCardsContainerSelector: ".basket__list",
+  orderTemplate: '#order',
+  orderSettings: {
+		cardButton: 'button[name=card]',
+		cashButton: 'button[name=cash]',
+		address: 'input[name=phone]',
+    submitButton: '.order__button',
+	},
 };

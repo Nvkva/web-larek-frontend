@@ -1,4 +1,4 @@
-import { IClickable } from "../../base/View";
+import { IClickable, IClickableEvent } from "../../base/View";
 
 export interface BasketViewData {
   products: BasketProductData[];

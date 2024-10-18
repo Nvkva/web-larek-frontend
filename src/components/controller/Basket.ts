@@ -8,7 +8,7 @@ export class BasketController extends Controller<AppState> {
 		this.model.removeProductFormBasket(args.item.id);
 	};
 	onSubmit = () => {
-		this.model.openModal(AppStateModals.contacts);
+		this.model.openModal(AppStateModals.order);
 	};
 	onClose = () => {
 		this.model.openModal(AppStateModals.none);

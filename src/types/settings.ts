@@ -71,4 +71,11 @@ export interface Settings {
 		price: string;
 		deleteButton: string;
 	};
+	orderTemplate: string;
+	orderSettings: {
+		cardButton: string;
+		cashButton: string;
+		address: string;
+		submitButton: string;
+	};
 }

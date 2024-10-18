@@ -17,7 +17,16 @@ export class BasketView extends View<BasketViewData, BasketSettings> {
         onClick: this.settings.onRemove,
       }),
     });
+
+    this.ensure(SETTINGS.basketModal.submitButton).addEventListener(
+			'click',
+			this.onClickHandler.bind(this),
+		);
   }
+
+  onClickHandler(event: MouseEvent) {
+		this.settings.onSubmit({ event });
+	}
 
   set products(products: BasketProductData[]) {
     this.setElement(

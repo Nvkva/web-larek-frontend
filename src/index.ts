@@ -1,11 +1,13 @@
 import { BasketController } from './components/controller/Basket';
 import { MainController } from './components/controller/Main';
+import { OrderController } from './components/controller/Order';
 import { ProductViewController } from './components/controller/ProductViewController';
 import { AppStateModel } from './components/model/AppState';
 import { AppStateEmitter } from './components/model/AppStateEmitter';
 import { ProductAPI } from './components/model/ProductApi';
 import { BasketViewScreen } from './components/view/screen/Basket';
 import { MainScreen } from './components/view/screen/Main';
+import { OrderInfoScreen } from './components/view/screen/OrderInfo';
 import { ProductViewScreen } from './components/view/screen/ProductView';
 import './scss/styles.scss';
 import { AppStateChanges, AppStateModals } from './types/components/model/AppState';
@@ -22,13 +24,13 @@ const modal = {
 	[AppStateModals.basket]: new BasketViewScreen(
 		new BasketController(app.model)
 	),
+	[AppStateModals.order]: new OrderInfoScreen(
+		new OrderController(app.model)
+	),
 	[AppStateModals.contacts]: new ProductViewScreen(
 		new ProductViewController(app.model)
 	),
 	[AppStateModals.success]: new ProductViewScreen(
-		new ProductViewController(app.model)
-	),
-	[AppStateModals.none]: new ProductViewScreen(
 		new ProductViewController(app.model)
 	),
 };
@@ -64,5 +66,11 @@ app.on(AppStateModals.basket, () => {
 		isDisabled: app.model.basket.size === 0,
 		isActive: true,
 		total: app.model.total,
+	});
+});
+
+app.on(AppStateModals.order, () => {
+	modal[AppStateModals.order].render({
+		isActive: true,
 	});
 });
