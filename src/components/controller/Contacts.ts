@@ -5,9 +5,13 @@ import { ContactsData } from '@app/types/components/view/partial/ContactsData';
 export class ContactsController extends Controller<AppState> {
   onSubmit = async () => {
     const request = this.model.orderRequest;
-    const requestResult = await this.api.postOrder(request);
-    if (requestResult.total === request.total) {
-      this.model.openModal(AppStateModals.success);
+    try {
+      const requestResult = await this.api.postOrder(request);
+      if (requestResult.total === request.total) {
+        this.model.openModal(AppStateModals.success);
+      }
+    } catch (error: unknown) {
+      throw error;
     }
   };
   onClose = () => {
