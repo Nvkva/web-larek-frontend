@@ -1,6 +1,6 @@
 import { BasketProductData } from "@app/types/components/view/partial/BasketProduct";
 import { AppState, AppStateChanges, AppStateModals, AppStateSettings } from "../../types/components/model/AppState";
-import { IProductAPI, Product } from "@app/types/components/model/ProductApi";
+import { IProductAPI, Order, Product } from "@app/types/components/model/ProductApi";
 import { SETTINGS } from "@app/utils/constants";
 import { OrderData } from "@app/types/components/view/partial/OrderData";
 import { ContactsData } from "@app/types/components/view/partial/ContactsData";
@@ -27,12 +27,28 @@ export class AppStateModel implements AppState {
 		return this.orderData;
 	}
 
-	private orderData: OrderData | null = null;
-
 	public get contactsInfo(): ContactsData | null {
 		return this.contactsData;
 	}
 
+	public get orderRequest(): Order {
+		return {
+			payment: this.orderData.selectedPayMethod,
+			email: this.contactsData.email,
+			phone: this.contactsData.phone,
+			address: this.orderData.address,
+			total: this.totalNumber,
+			items: Array.from(this.basket.values()).map(item => item.id),
+		}
+	}
+
+	private get totalNumber(): number | null {
+		const basketValues: BasketProductData[] = Array.from(this.basket.values());
+		const totalValue = basketValues.reduce((acc, item) => acc + Number(item.price), 0);
+		return totalValue;
+	}
+
+	private orderData: OrderData | null = null;
 	private contactsData: ContactsData | null = null;
 
 	constructor(protected api: IProductAPI, protected settings: AppStateSettings) { }

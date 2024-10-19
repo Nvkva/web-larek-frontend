@@ -1,4 +1,4 @@
-import { IProductAPI, Product } from "@app/types/components/model/ProductApi";
+import { IProductAPI, Order, Product } from "@app/types/components/model/ProductApi";
 import { BasketProductData } from "../view/partial/BasketProduct";
 import { OrderData } from "../view/partial/OrderData";
 import { ContactsData } from "../view/partial/ContactsData";
@@ -32,6 +32,7 @@ export interface AppState {
 	total: string;
 	orderInfo: OrderData | null;
 	contactsInfo: ContactsData | null;
+	orderRequest: Order;
 
 	openModal(modal: AppStateModals): void;
 	selectProduct(product: Product): void;

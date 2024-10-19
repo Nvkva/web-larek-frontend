@@ -8,7 +8,7 @@ export class ContactsView extends View<ContactsData, ContactsViewSettings> {
     this.submitButton = this.ensure(this.settings.submitButton);
     this.submitButton.addEventListener(
       'click',
-      this.settings.onSubmit.bind(this),
+      this.onClickHandler.bind(this),
     )
 
     this.element.addEventListener('submit', this.settings.onSubmit.bind(this),);
@@ -21,6 +21,11 @@ export class ContactsView extends View<ContactsData, ContactsViewSettings> {
     (this.submitButton as HTMLButtonElement).disabled = !(Boolean(this.data.phone.length) && Boolean(this.data.email.length));
     return false;
   }
+
+  onClickHandler(event: MouseEvent) {
+    event.preventDefault();
+		this.settings.onSubmit({ event });
+	}
 
   set email(value: string) {
     this.setValue<HTMLInputElement>(this.settings.email, {

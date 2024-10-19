@@ -32,7 +32,7 @@ const modal = {
 		new OrderController(app.model)
 	),
 	[AppStateModals.contacts]: new ContactsScreen(
-		new ContactsController(app.model)
+		new ContactsController(app.model, api)
 	),
 	[AppStateModals.success]: new SuccessScreen(
 		new SuccessController(app.model)

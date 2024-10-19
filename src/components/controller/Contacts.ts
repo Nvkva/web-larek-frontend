@@ -1,11 +1,14 @@
 import { Controller } from '@app/components/base/Controller';
 import { AppState, AppStateModals } from '@app/types/components/model/AppState';
 import { ContactsData } from '@app/types/components/view/partial/ContactsData';
-import { OrderData } from '@app/types/components/view/partial/OrderData';
 
 export class ContactsController extends Controller<AppState> {
-  onSubmit = () => {
-    this.model.openModal(AppStateModals.success);
+  onSubmit = async () => {
+    const request = this.model.orderRequest;
+    const requestResult = await this.api.postOrder(request);
+    if (requestResult.total === request.total) {
+      this.model.openModal(AppStateModals.success);
+    }
   };
   onClose = () => {
     this.model.openModal(AppStateModals.none);
