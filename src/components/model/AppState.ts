@@ -61,30 +61,15 @@ export class AppStateModel implements AppState {
 		this.notifyChanged(AppStateChanges.products);
 	}
 
-	async loadProductItem(id: string): Promise<void> {
-		if (!this.products.has(id)) {
-			throw new Error(`Invalid product id: ${id}`);
-		}
-		try {
-			await this.api.getProduct(id);
-		} catch (err: unknown) {
-			if (err instanceof Error) {
-				this.setMessage(err.message, true);
-			}
-			if (typeof err === 'string') {
-				this.setMessage(err, true);
-			}
-		}
-		this.notifyChanged(AppStateChanges.productView);
-	}
-
 	selectProduct(product: Product): void {
 		if (!product) {
 			this.selectedProduct = null;
+			this.notifyChanged(AppStateChanges.productView);
 			return;
 		}
 		if (product) {
 			this.selectedProduct = product;
+			this.notifyChanged(AppStateChanges.productView);
 		} else {
 			throw new Error(`Invalid product`);
 		}
