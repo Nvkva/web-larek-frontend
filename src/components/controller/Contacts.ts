@@ -11,7 +11,7 @@ export class ContactsController extends Controller<AppState> {
         this.model.openModal(AppStateModals.success);
       }
     } catch (error: unknown) {
-      throw error;
+      console.error(error);
     }
   };
   onClose = () => {
