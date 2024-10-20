@@ -5,5 +5,5 @@ export interface ProductViewData extends ModalScreenData {
   product: ProductData,
 }
 
-export interface ProductViewScreenSettings extends ModalScreenSettings {
+export interface ProductViewScreenSettings extends ModalScreenSettings<ProductData> {
 }

@@ -4,7 +4,7 @@ import { OrderData } from '@app/types/components/view/partial/OrderData';
 
 export class OrderController extends Controller<AppState> {
   onSubmit = () => {
-    this.model.openModal(AppStateModals.contacts);
+    // this.model.openModal(AppStateModals.contacts);
   };
   onClose = () => {
     this.model.openModal(AppStateModals.none);

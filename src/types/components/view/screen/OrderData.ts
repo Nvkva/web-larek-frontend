@@ -5,6 +5,6 @@ export interface OrderScreenData extends ModalScreenData {
   data: OrderData;
 }
 
-export interface OrderScreenSettings extends ModalScreenSettings {
+export interface OrderScreenSettings extends ModalScreenSettings<OrderData> {
   onChange: (data: OrderData) => void;
 }

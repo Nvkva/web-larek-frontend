@@ -7,6 +7,6 @@ export interface BasketData extends ModalScreenData {
 	total: string;
 }
 
-export interface BasketSettings extends ModalScreenSettings {
+export interface BasketSettings extends ModalScreenSettings<BasketData> {
 	onRemove: (args: IClickableEvent<BasketProductData>) => void;
 }

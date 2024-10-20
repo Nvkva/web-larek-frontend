@@ -11,7 +11,7 @@ import { ensureElement } from "@app/utils/utils";
 export abstract class ModalScreen<
 	M, // внутренние данные для контента модального окна
 	C, // внешние данные для экрана
-	S extends ModalScreenSettings // настройки экрана (обработчики событий
+	S extends ModalScreenSettings<M> // настройки экрана (обработчики событий
 > extends Screen<C, S> {
 	// модальное окно
 	protected declare modal: ModalView<M>;
@@ -20,30 +20,9 @@ export abstract class ModalScreen<
 
 	// Переопределенный init() для инициализации модального окна
 	protected init() {
-		this.modal = this.getModalView(
-			{
-				contentView: this.initContent(),
-			},
-			this.settings.onClose
-		);
-
+		this.modal = this.settings.modalView;
 		this.element = this.modal.element;
 	}
-
-	// Вспомогательные методы
-
-	protected getModalView(
-		settings: { contentView: IView<M> },
-		onClose: () => void
-	) {
-		return new ModalView<M>(ensureElement(SETTINGS.modalTemplate), {
-			...SETTINGS.modalSettings,
-			...settings,
-			onClose,
-		});
-	}
-
-	// Методы установки данных
 
 	set content(value: M) {
 		this.modal.content = value;
@@ -51,9 +30,5 @@ export abstract class ModalScreen<
 
 	set isActive(value: boolean) {
 		this.modal.isActive = value;
-	}
-
-	set isDisabled(state: boolean) {
-		// this.submitButton.disabled = state;
 	}
 }

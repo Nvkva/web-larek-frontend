@@ -5,6 +5,6 @@ export interface ContactsScreenData extends ModalScreenData {
   data: ContactsData;
 }
 
-export interface ContactsScreenSettings extends ModalScreenSettings {
+export interface ContactsScreenSettings extends ModalScreenSettings<ContactsData> {
   onChange: (data: ContactsData) => void;
 }

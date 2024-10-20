@@ -1,4 +1,4 @@
-import { ProductData } from "../partial/ProductData";
+import { ContactsData } from "../partial/ContactsData";
 import { ModalScreenData, ModalScreenSettings } from "./ModalScreen";
 
 export interface CredentialsData extends ModalScreenData {
@@ -6,5 +6,5 @@ export interface CredentialsData extends ModalScreenData {
   phone: string;
 }
 
-export interface CredentialsSettings extends ModalScreenSettings {
+export interface CredentialsSettings extends ModalScreenSettings<ContactsData> {
 }

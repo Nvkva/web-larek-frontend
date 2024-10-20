@@ -8,7 +8,7 @@ export class ContactsController extends Controller<AppState> {
     try {
       const requestResult = await this.api.postOrder(request);
       if (requestResult.total === request.total) {
-        this.model.openModal(AppStateModals.success);
+        // this.model.openModal(AppStateModals.success);
       }
     } catch (error: unknown) {
       console.error(error);

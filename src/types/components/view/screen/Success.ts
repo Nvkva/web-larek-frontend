@@ -5,5 +5,5 @@ export interface SuccessScreenData extends ModalScreenData {
   data: SuccessData;
 }
 
-export interface SuccessScreenSettings extends ModalScreenSettings {
+export interface SuccessScreenSettings extends ModalScreenSettings<SuccessData> {
 }
