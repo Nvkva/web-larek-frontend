@@ -1,5 +1,6 @@
 import { BasketController } from './components/controller/Basket';
 import { MainController } from './components/controller/Main';
+import { OrderController } from './components/controller/Order';
 import { ProductViewController } from './components/controller/ProductViewController';
 import { AppStateModel } from './components/model/AppState';
 import { AppStateEmitter } from './components/model/AppStateEmitter';
@@ -9,16 +10,19 @@ import { ModalView } from './components/view/common/Modal';
 import { BasketView } from './components/view/partial/Basket';
 import { BasketProductView } from './components/view/partial/BasketProduct';
 import { CardView } from './components/view/partial/Card';
+import { OrderInfoView } from './components/view/partial/Order';
 import { PageView } from './components/view/partial/Page';
 import { ProductView } from './components/view/partial/Product';
 import { BasketViewScreen } from './components/view/screen/Basket';
 import { MainScreen } from './components/view/screen/Main';
+import { OrderInfoScreen } from './components/view/screen/OrderInfo';
 import { ProductViewScreen } from './components/view/screen/ProductView';
 import './scss/styles.scss';
 import { AppStateChanges, AppStateModals } from './types/components/model/AppState';
 import { ModalChange } from './types/components/model/AppStateEmitter';
-import { BasketProductData, BasketViewData } from './types/components/view/partial/BasketProduct';
+import { BasketProductData } from './types/components/view/partial/BasketProduct';
 import { CardData } from './types/components/view/partial/Card';
+import { OrderData } from './types/components/view/partial/OrderData';
 import { ProductData } from './types/components/view/partial/ProductData';
 import { BasketData } from './types/components/view/screen/Basket';
 import { API_URL, CDN_URL, SETTINGS } from './utils/constants';
@@ -75,7 +79,8 @@ const basketView = new BasketView(
 	{
 		...SETTINGS.basketModal,
 		...basketController,
-		onClick: basketController.onRemove
+		onClick: basketController.onRemove,
+		onSubmit: basketController.onSubmit,
 	},
 	basketElements,
 );
@@ -86,12 +91,23 @@ const basketModal = new ModalView<BasketData>(ensureElement(SETTINGS.modalTempla
 });
 const basketViewScreen = new BasketViewScreen({ ...basketController, modalView: basketModal }, basketView);
 
+const orderController = new OrderController(app.model);
+const orderView = new OrderInfoView(cloneTemplate(SETTINGS.orderTemplate), {
+	...SETTINGS.orderSettings,
+	onChange: orderController.onChange.bind(this),
+	onSubmit: orderController.onSubmit.bind(this),
+});
+const orderModal = new ModalView<OrderData>(ensureElement(SETTINGS.modalTemplate), {
+	...SETTINGS.modalSettings,
+	contentView: orderView,
+	onClose: orderController.onClose,
+});
+const orderScreen = new OrderInfoScreen({ ...orderController, modalView: orderModal }, orderView);
+
 const modal = {
 	[AppStateModals.productView]: productViewScreen,
-	[AppStateModals.basket]: basketViewScreen
-	// [AppStateModals.order]: new OrderInfoScreen(
-	// 	new OrderController(app.model)
-	// ),
+	[AppStateModals.basket]: basketViewScreen,
+	[AppStateModals.order]: orderScreen,
 	// [AppStateModals.contacts]: new ContactsScreen(
 	// 	new ContactsController(app.model, api)
 	// ),
@@ -134,17 +150,17 @@ app.on(AppStateModals.basket, () => {
 	});
 });
 
-// app.on(AppStateModals.order, () => {
-// 	modal[AppStateModals.order].render({
-// 		data: { address: '', selectedPayMethod: 'card' },
-// 		isActive: true,
-// 		isDisabled: !app.model.orderData?.address,
-// 	});
-// });
+app.on(AppStateModals.order, () => {
+	modal[AppStateModals.order].render({
+		data: { address: '', selectedPayMethod: 'card' },
+		isActive: true,
+		isDisabled: !app.model.orderData?.address,
+	});
+});
 
-// app.on(AppStateChanges.order, () => {
-// 	modal[AppStateModals.order].data = app.model.orderData;
-// });
+app.on(AppStateChanges.order, () => {
+	modal[AppStateModals.order].data = app.model.orderData;
+});
 
 // app.on(AppStateModals.contacts, () => {
 // 	modal[AppStateModals.contacts].render({

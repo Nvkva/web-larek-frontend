@@ -5,6 +5,7 @@ export interface BasketViewData {
 }
 
 export interface BasketViewSettings extends IClickable<BasketProductData> {
+  onSubmit: (data?: any) => void;
 }
 
 export interface BasketProductData {

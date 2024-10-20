@@ -11,12 +11,12 @@ export class OrderInfoScreen extends ModalScreen<
 	OrderScreenData,
 	OrderScreenSettings
 > {
+  constructor(settings: OrderScreenSettings, private orderView: OrderInfoView) {
+    super(settings);
+  }
+
 	initContent(): IView<OrderData> {
-		return new OrderInfoView(cloneTemplate(SETTINGS.orderTemplate), {
-			...SETTINGS.orderSettings,
-			onChange: this.onFormChange.bind(this),
-      onSubmit: this.settings.onSubmit.bind(this),
-		});
+		return this.orderView;
 	}
 
 	protected onFormChange({ value }: IChangeableEvent<OrderData>) {
