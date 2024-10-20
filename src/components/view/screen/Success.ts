@@ -1,5 +1,5 @@
 import { ModalScreen } from "./ModalScreen";
-import { IChangeableEvent, IView } from "@app/types/components/base/View";
+import { IView } from "@app/types/components/base/View";
 import { SETTINGS } from "@app/utils/constants";
 import { cloneTemplate } from "@app/utils/utils";
 import { SuccessScreenData, SuccessScreenSettings } from "@app/types/components/view/screen/Success";
@@ -11,11 +11,12 @@ export class SuccessScreen extends ModalScreen<
   SuccessScreenData,
   SuccessScreenSettings
 > {
+  constructor(settings: SuccessScreenSettings, private successView: SuccessView) {
+    super(settings);
+  }
+
   initContent(): IView<SuccessData> {
-    return new SuccessView(cloneTemplate(SETTINGS.successTemplate), {
-      ...SETTINGS.successSettings,
-      onClick: this.settings.onSubmit,
-    });
+    return this.successView;
   }
 
   set data(data: SuccessData) {

@@ -17,10 +17,6 @@ export class OrderInfoScreen extends ModalScreen<
 		return this.orderView;
 	}
 
-	protected onFormChange({ value }: IChangeableEvent<OrderData>) {
-		this.settings.onChange(value);
-	}
-
   set data(data: OrderData) {
     this.modal.content = data;
   }

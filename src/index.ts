@@ -3,6 +3,7 @@ import { ContactsController } from './components/controller/Contacts';
 import { MainController } from './components/controller/Main';
 import { OrderController } from './components/controller/Order';
 import { ProductViewController } from './components/controller/ProductViewController';
+import { SuccessController } from './components/controller/Success';
 import { AppStateModel } from './components/model/AppState';
 import { AppStateEmitter } from './components/model/AppStateEmitter';
 import { ProductAPI } from './components/model/ProductApi';
@@ -15,11 +16,13 @@ import { ContactsView } from './components/view/partial/Contacts';
 import { OrderInfoView } from './components/view/partial/Order';
 import { PageView } from './components/view/partial/Page';
 import { ProductView } from './components/view/partial/Product';
+import { SuccessView } from './components/view/partial/Success';
 import { BasketViewScreen } from './components/view/screen/Basket';
 import { ContactsScreen } from './components/view/screen/Contacts';
 import { MainScreen } from './components/view/screen/Main';
 import { OrderInfoScreen } from './components/view/screen/OrderInfo';
 import { ProductViewScreen } from './components/view/screen/ProductView';
+import { SuccessScreen } from './components/view/screen/Success';
 import './scss/styles.scss';
 import { AppStateChanges, AppStateModals } from './types/components/model/AppState';
 import { ModalChange } from './types/components/model/AppStateEmitter';
@@ -28,6 +31,7 @@ import { CardData } from './types/components/view/partial/Card';
 import { ContactsData } from './types/components/view/partial/ContactsData';
 import { OrderData } from './types/components/view/partial/OrderData';
 import { ProductData } from './types/components/view/partial/ProductData';
+import { SuccessData } from './types/components/view/partial/Success';
 import { BasketData } from './types/components/view/screen/Basket';
 import { API_URL, CDN_URL, SETTINGS } from './utils/constants';
 import { cloneTemplate, ensureElement } from './utils/utils';
@@ -121,14 +125,24 @@ const contactsModal = new ModalView<ContactsData>(ensureElement(SETTINGS.modalTe
 });
 const contactsScreen = new ContactsScreen({ ...contactsController, modalView: contactsModal }, contactsView);
 
+const successController = new SuccessController(app.model);
+const successView = new SuccessView(cloneTemplate(SETTINGS.successTemplate), {
+	...SETTINGS.successSettings,
+	onClick: successController.onSubmit,
+});
+const successModal = new ModalView<SuccessData>(ensureElement(SETTINGS.modalTemplate), {
+	...SETTINGS.modalSettings,
+	contentView: successView,
+	onClose: successController.onClose,
+});
+const successScreen = new SuccessScreen({ ...successController, modalView: successModal }, successView);
+
 const modal = {
 	[AppStateModals.productView]: productViewScreen,
 	[AppStateModals.basket]: basketViewScreen,
 	[AppStateModals.order]: orderScreen,
 	[AppStateModals.contacts]: contactsScreen,
-	// [AppStateModals.success]: new SuccessScreen(
-	// 	new SuccessController(app.model)
-	// ),
+	[AppStateModals.success]: successScreen,
 };
 
 app.on(AppStateChanges.modal, ({ previous, current }: ModalChange) => {
@@ -189,9 +203,9 @@ app.on(AppStateChanges.contacts, () => {
 	modal[AppStateModals.contacts].data = app.model.contactsInfo;
 });
 
-// app.on(AppStateModals.success, () => {
-// 	modal[AppStateModals.success].render({
-// 		data: { totalDescription: app.model.totalLabel },
-// 		isActive: true,
-// 	});
-// });
+app.on(AppStateModals.success, () => {
+	modal[AppStateModals.success].render({
+		data: { totalDescription: app.model.totalLabel },
+		isActive: true,
+	});
+});
