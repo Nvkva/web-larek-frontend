@@ -5,7 +5,7 @@ import { ContactsData } from "../view/partial/ContactsData";
 
 export enum AppStateModals {
 	productView = 'modal:productView',
-	// basket = 'modal:basket',
+	basket = 'modal:basket',
 	// order = 'modal:order',
 	// contacts = 'modal:contacts',
 	// success = 'modal:success',

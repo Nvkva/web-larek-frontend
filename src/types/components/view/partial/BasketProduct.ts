@@ -4,6 +4,9 @@ export interface BasketViewData {
   products: BasketProductData[];
 }
 
+export interface BasketViewSettings extends IClickable<BasketProductData> {
+}
+
 export interface BasketProductData {
   id: string;
   title: string;

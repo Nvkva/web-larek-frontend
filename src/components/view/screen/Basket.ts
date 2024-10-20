@@ -2,7 +2,7 @@ import { ModalScreen } from "./ModalScreen";
 import { SETTINGS } from "@app/utils/constants";
 import { cloneTemplate } from "@app/utils/utils";
 import { BasketData, BasketSettings } from "@app/types/components/view/screen/Basket";
-import { BasketProductData, BasketViewData } from "@app/types/components/view/partial/BasketProduct";
+import { BasketProductData, BasketProductSettings, BasketViewData } from "@app/types/components/view/partial/BasketProduct";
 import { BasketView } from "../partial/Basket";
 
 
@@ -12,10 +12,11 @@ export class BasketViewScreen extends ModalScreen<
   BasketSettings
 > {
   initContent() {
-    return new BasketView(cloneTemplate(SETTINGS.basketTemplate), {
-      ...SETTINGS.basketModal,
-      ...this.settings,
-    });
+    return this.basketView;
+  }
+
+  constructor(settings: BasketSettings, private basketView: BasketView) {
+    super(settings);
   }
 
   set products(products: BasketProductData[]) {
