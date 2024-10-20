@@ -15,7 +15,7 @@ export class SuccessView extends View<SuccessData, SuccessViewSettings> {
 	}
 
   set totalDescription(value: string) {
-    if (value !== SETTINGS.nullPriceLabel) {
+    if (value !== SETTINGS.pricelessTotalLabel) {
       this.setValue(this.settings.description, `Списано ${value} синапсов`);
     } else {
       this.setValue(this.settings.description, 'Ваша корзина оказалась бесценной!');

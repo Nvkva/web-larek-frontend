@@ -32,7 +32,7 @@ export class CardView extends View<CardData, CardSettings> {
 	}
 
 	set price(value: number | null) {
-		this.setValue(this.settings.price, value ? `${String(value)} синапсов` : SETTINGS.nullPriceLabel);
+		this.setValue(this.settings.price, value ? `${String(value)} синапсов` : SETTINGS.pricelessTotalLabel);
 	}
 
 	set category(value: string) {

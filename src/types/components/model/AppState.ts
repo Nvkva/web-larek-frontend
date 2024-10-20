@@ -29,8 +29,8 @@ export interface AppState {
 	selectedProduct: Product | null;
 	openedModal: AppStateModals;
 	basket: Map<string, BasketProductData>;
-	total: string;
-	orderInfo: OrderData | null;
+	totalLabel: string;
+	orderData: OrderData | null;
 	contactsInfo: ContactsData | null;
 	orderRequest: Order;
 

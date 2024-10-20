@@ -24,7 +24,7 @@ export const SETTINGS: Settings = {
     price: '.card__price',
   },
   cardCatalog: '#card-catalog',
-  nullPriceLabel: 'Бесценно',
+  pricelessTotalLabel: 'Бесценно',
   appState: {
     storageKey: '__filmTickets',
   },

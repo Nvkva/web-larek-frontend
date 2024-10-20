@@ -30,7 +30,7 @@ export interface Settings {
 		messageErrorClass: string;
 	};
 	cardCatalog: string;
-	nullPriceLabel: string;
+	pricelessTotalLabel: string;
 	appState: {
 		storageKey: string;
 	};

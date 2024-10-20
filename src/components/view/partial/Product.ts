@@ -46,6 +46,6 @@ private submitButton: HTMLElement;
 		} else {
 			(this.submitButton as HTMLButtonElement).disabled = false;
 		}
-		this.setValue(this.settings.price, value ? `${String(value)} синапсов` : SETTINGS.nullPriceLabel);
+		this.setValue(this.settings.price, value ? `${String(value)} синапсов` : SETTINGS.pricelessTotalLabel);
 	}
 }

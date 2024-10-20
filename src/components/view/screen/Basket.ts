@@ -25,6 +25,6 @@ export class BasketViewScreen extends ModalScreen<
   }
 
   set total(total: string) {
-    this.setValue(SETTINGS.basketModal.total, total === SETTINGS.nullPriceLabel ? total : `${total} cинапсов`)
+    this.setValue(SETTINGS.basketModal.total, total === SETTINGS.pricelessTotalLabel ? total : `${total} cинапсов`)
   }
 }

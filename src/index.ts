@@ -68,7 +68,7 @@ app.on(AppStateChanges.basket, () => {
 	main.counter = app.model.basket.size;
 	modal[AppStateModals.basket].products = Array.from(app.model.basket.values());
 	modal[AppStateModals.basket].isDisabled = app.model.basket.size === 0;
-	modal[AppStateModals.basket].total = app.model.total;
+	modal[AppStateModals.basket].total = app.model.totalLabel;
 });
 
 app.on(AppStateModals.basket, () => {
@@ -76,7 +76,7 @@ app.on(AppStateModals.basket, () => {
 		products: Array.from(app.model.basket.values()),
 		isDisabled: app.model.basket.size === 0,
 		isActive: true,
-		total: app.model.total,
+		total: app.model.totalLabel,
 	});
 });
 
@@ -84,12 +84,12 @@ app.on(AppStateModals.order, () => {
 	modal[AppStateModals.order].render({
 		data: { address: '', selectedPayMethod: 'card' },
 		isActive: true,
-		isDisabled: !app.model.orderInfo?.address,
+		isDisabled: !app.model.orderData?.address,
 	});
 });
 
 app.on(AppStateChanges.order, () => {
-	modal[AppStateModals.order].data = app.model.orderInfo;
+	modal[AppStateModals.order].data = app.model.orderData;
 });
 
 app.on(AppStateModals.contacts, () => {
@@ -106,7 +106,7 @@ app.on(AppStateChanges.contacts, () => {
 
 app.on(AppStateModals.success, () => {
 	modal[AppStateModals.success].render({
-		data: { totalDescription: app.model.total },
+		data: { totalDescription: app.model.totalLabel },
 		isActive: true,
 	});
 });
