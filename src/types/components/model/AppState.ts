@@ -32,7 +32,7 @@ export interface AppState {
 	basket: Map<string, BasketProductData>;
 	totalLabel: string;
 	orderData: OrderData | null;
-	contactsInfo: ContactsData | null;
+	contactsData: ContactsData | null;
 	orderRequest: Order;
 
 	openModal(modal: AppStateModals): void;

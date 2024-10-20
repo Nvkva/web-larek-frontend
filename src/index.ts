@@ -200,12 +200,12 @@ app.on(AppStateModals.contacts, () => {
 	modal[AppStateModals.contacts].render({
 		data: { email: '', phone: '' },
 		isActive: true,
-		isDisabled: !app.model.contactsInfo?.email && !app.model.contactsInfo?.phone,
+		isDisabled: !app.model.contactsData?.email && !app.model.contactsData?.phone,
 	});
 });
 
 app.on(AppStateChanges.contacts, () => {
-	modal[AppStateModals.contacts].data = app.model.contactsInfo;
+	modal[AppStateModals.contacts].data = app.model.contactsData;
 });
 
 app.on(AppStateModals.success, () => {

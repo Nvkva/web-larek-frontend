@@ -12,12 +12,8 @@ export class AppStateModel implements AppState {
 	public basket: Map<string, BasketProductData> = new Map<string, BasketProductData>();
 	public selectedProduct: Product | null = null;
 	public totalLabel: string = '';
-
 	public orderData: OrderData | null = null;
-
-	public get contactsInfo(): ContactsData | null {
-		return this.contactsData;
-	}
+	public contactsData: ContactsData | null = null;
 
 	public get orderRequest(): Order {
 		return {
@@ -32,7 +28,6 @@ export class AppStateModel implements AppState {
 
 	protected settings: AppStateSettings;
 	private totalNumber: number = 0;
-	private contactsData: ContactsData | null = null;
 
 	constructor(settings: AppStateSettings) {
 		this.settings = settings;
@@ -113,6 +108,10 @@ export class AppStateModel implements AppState {
 
 	resetState(): void {
 		this.basket.clear();
+		this.orderData = null;
+		this.contactsData = null;
+		this.totalLabel = '';
+		this.totalNumber = 0;
 		this.notifyChanged(AppStateChanges.counter);
 	}
 
