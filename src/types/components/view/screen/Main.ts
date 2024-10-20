@@ -9,5 +9,4 @@ export interface MainData {
 export interface MainSettings {
 	onOpenBasket: () => void;
 	onOpenProduct: (id: string) => void;
-	loadProducts: () => Promise<void>;
 }

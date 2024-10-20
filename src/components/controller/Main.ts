@@ -11,9 +11,4 @@ export class MainController extends Controller<AppState> {
 		this.model.selectProduct(product);
 		this.model.openModal(AppStateModals.productView);
 	};
-
-	loadProducts = async () => {
-		const products = await this.api.getProducts();
-		this.model.setProducts(products);
-	}
 }

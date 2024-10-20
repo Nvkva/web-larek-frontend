@@ -52,5 +52,5 @@ export interface AppStateSettings {
 
 // Конструктор модели данных
 export interface AppStateConstructor {
-	new(api: IProductAPI, settings: AppStateSettings): AppState;
+	new(settings: AppStateSettings): AppState;
 }

@@ -20,6 +20,13 @@ import { API_URL, CDN_URL, SETTINGS } from './utils/constants';
 
 const api = new ProductAPI(CDN_URL, API_URL);
 const app = new AppStateEmitter(api, SETTINGS.appState, AppStateModel);
+
+api.getProducts()
+	.then((products) => {
+		app.model.setProducts(products);
+	})
+	.catch((err: string) => console.log(`Error: `, err));
+
 const main = new MainScreen(new MainController(app.model, api));
 const modal = {
 	[AppStateModals.productView]: new ProductViewScreen(
@@ -99,7 +106,7 @@ app.on(AppStateChanges.contacts, () => {
 
 app.on(AppStateModals.success, () => {
 	modal[AppStateModals.success].render({
-		data: { totalDescription: app.model.total},
+		data: { totalDescription: app.model.total },
 		isActive: true,
 	});
 });

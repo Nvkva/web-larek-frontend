@@ -14,7 +14,7 @@ export class AppStateEmitter extends EventEmitter {
 	) {
 		super();
 
-		this.model = new Model(api, {
+		this.model = new Model({
 			...settings,
 			onChange: this.onModelChange.bind(this),
 		});

@@ -17,8 +17,6 @@ export class MainScreen extends Screen<MainData, MainSettings> {
 	}
 
 	protected init() {
-		this.settings.loadProducts();
-
 		this.page = new PageView(ensureElement(SETTINGS.pageSelector), {
 			...SETTINGS.pageSettings,
 			onClick: this.settings.onOpenBasket,
