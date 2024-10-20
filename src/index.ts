@@ -1,7 +1,8 @@
 import { BasketController } from './components/controller/Basket';
 import { ContactsController } from './components/controller/Contacts';
-import { MainController } from './components/controller/Main';
+import { GalleryController } from './components/controller/Gallery';
 import { OrderController } from './components/controller/Order';
+import { PageController } from './components/controller/Page';
 import { ProductViewController } from './components/controller/ProductViewController';
 import { SuccessController } from './components/controller/Success';
 import { AppStateModel } from './components/model/AppState';
@@ -19,7 +20,6 @@ import { ProductView } from './components/view/partial/Product';
 import { SuccessView } from './components/view/partial/Success';
 import { BasketViewScreen } from './components/view/screen/Basket';
 import { ContactsScreen } from './components/view/screen/Contacts';
-import { MainScreen } from './components/view/screen/Main';
 import { OrderInfoScreen } from './components/view/screen/OrderInfo';
 import { ProductViewScreen } from './components/view/screen/ProductView';
 import { SuccessScreen } from './components/view/screen/Success';
@@ -45,22 +45,23 @@ api.getProducts()
 	})
 	.catch((err: string) => console.log(`Error: `, err));
 
-const mainController = new MainController(app.model, api);
+const pageController = new PageController(app.model, api);
 const page = new PageView(ensureElement(SETTINGS.pageSelector), {
 	...SETTINGS.pageSettings,
-	onClick: mainController.onOpenBasket,
+	onClick: pageController.onOpenBasket,
 });
+
+const galleryController = new GalleryController(app.model, api);
 const gallery = new ListView<CardData>(
 	ensureElement(SETTINGS.gallerySelector),
 	{
 		...SETTINGS.gallerySettings,
 		item: new CardView(cloneTemplate(SETTINGS.cardCatalog), {
 			...SETTINGS.cardSettings,
-			onClick: mainController.onOpenProduct,
+			onClick: galleryController.onOpenProduct,
 		}),
 	}
 );
-const main = new MainScreen(mainController, page, gallery);
 
 const productViewController = new ProductViewController(app.model, api);
 const productView = new ProductView(cloneTemplate(SETTINGS.productViewElement), {
@@ -146,14 +147,14 @@ const modal = {
 };
 
 app.on(AppStateChanges.modal, ({ previous, current }: ModalChange) => {
-	main.page.isLocked = current !== AppStateModals.none;
+	page.isLocked = current !== AppStateModals.none;
 	if (previous !== AppStateModals.none) {
 		modal[previous].render({ isActive: false });
 	}
 });
 
 app.on(AppStateChanges.products, () => {
-	main.items = Array.from(app.model.products.values());
+	gallery.items = Array.from(app.model.products.values());
 });
 
 app.on(AppStateModals.productView, () => {
@@ -164,14 +165,14 @@ app.on(AppStateModals.productView, () => {
 });
 
 app.on(AppStateChanges.basket, () => {
-	main.counter = app.model.basket.size;
+	page.counter = app.model.basket.size;
 	modal[AppStateModals.basket].products = Array.from(app.model.basket.values());
 	modal[AppStateModals.basket].isDisabled = app.model.basket.size === 0;
 	modal[AppStateModals.basket].total = app.model.totalLabel;
 });
 
 app.on(AppStateChanges.counter, () => {
-	main.counter = app.model.basket.size;
+	page.counter = app.model.basket.size;
 });
 
 app.on(AppStateModals.basket, () => {
