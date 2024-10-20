@@ -11,7 +11,7 @@ export class ContactsView extends View<ContactsData, ContactsViewSettings> {
       this.onClickHandler.bind(this),
     )
 
-    this.element.addEventListener('submit', this.settings.onSubmit.bind(this),);
+    this.element.addEventListener('submit', this.settings.onSubmit.bind(this));
     this.element.addEventListener('change', this.onSubmitHandler.bind(this));
   }
 

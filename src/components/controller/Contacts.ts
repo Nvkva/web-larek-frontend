@@ -1,4 +1,5 @@
 import { Controller } from '@app/components/base/Controller';
+import { IChangeableEvent } from '@app/types/components/base/View';
 import { AppState, AppStateModals } from '@app/types/components/model/AppState';
 import { ContactsData } from '@app/types/components/view/partial/ContactsData';
 
@@ -17,7 +18,7 @@ export class ContactsController extends Controller<AppState> {
   onClose = () => {
     this.model.openModal(AppStateModals.none);
   };
-  onChange = (value: ContactsData) => {
-    this.model.fillContactsData(value);
+  onChange = (args: IChangeableEvent<ContactsData>) => {
+    this.model.fillContactsData(args.value);
   };
 }

@@ -1,3 +1,4 @@
+import { IChangeableEvent } from "../../base/View";
 import { ContactsData } from "../partial/ContactsData";
 import { ModalScreenData, ModalScreenSettings } from "./ModalScreen";
 
@@ -6,5 +7,5 @@ export interface ContactsScreenData extends ModalScreenData {
 }
 
 export interface ContactsScreenSettings extends ModalScreenSettings<ContactsData> {
-  onChange: (data: ContactsData) => void;
+  onChange: (args: IChangeableEvent<ContactsData>) => void;
 }

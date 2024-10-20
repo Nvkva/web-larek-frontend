@@ -1,4 +1,5 @@
 import { BasketController } from './components/controller/Basket';
+import { ContactsController } from './components/controller/Contacts';
 import { MainController } from './components/controller/Main';
 import { OrderController } from './components/controller/Order';
 import { ProductViewController } from './components/controller/ProductViewController';
@@ -10,10 +11,12 @@ import { ModalView } from './components/view/common/Modal';
 import { BasketView } from './components/view/partial/Basket';
 import { BasketProductView } from './components/view/partial/BasketProduct';
 import { CardView } from './components/view/partial/Card';
+import { ContactsView } from './components/view/partial/Contacts';
 import { OrderInfoView } from './components/view/partial/Order';
 import { PageView } from './components/view/partial/Page';
 import { ProductView } from './components/view/partial/Product';
 import { BasketViewScreen } from './components/view/screen/Basket';
+import { ContactsScreen } from './components/view/screen/Contacts';
 import { MainScreen } from './components/view/screen/Main';
 import { OrderInfoScreen } from './components/view/screen/OrderInfo';
 import { ProductViewScreen } from './components/view/screen/ProductView';
@@ -22,6 +25,7 @@ import { AppStateChanges, AppStateModals } from './types/components/model/AppSta
 import { ModalChange } from './types/components/model/AppStateEmitter';
 import { BasketProductData } from './types/components/view/partial/BasketProduct';
 import { CardData } from './types/components/view/partial/Card';
+import { ContactsData } from './types/components/view/partial/ContactsData';
 import { OrderData } from './types/components/view/partial/OrderData';
 import { ProductData } from './types/components/view/partial/ProductData';
 import { BasketData } from './types/components/view/screen/Basket';
@@ -104,13 +108,24 @@ const orderModal = new ModalView<OrderData>(ensureElement(SETTINGS.modalTemplate
 });
 const orderScreen = new OrderInfoScreen({ ...orderController, modalView: orderModal }, orderView);
 
+const contactsController = new ContactsController(app.model, api);
+const contactsView = new ContactsView(cloneTemplate(SETTINGS.contactsTemplate), {
+	...SETTINGS.contactsSettings,
+	onChange: contactsController.onChange,
+	onSubmit: contactsController.onSubmit,
+});
+const contactsModal = new ModalView<ContactsData>(ensureElement(SETTINGS.modalTemplate), {
+	...SETTINGS.modalSettings,
+	contentView: contactsView,
+	onClose: contactsController.onClose,
+});
+const contactsScreen = new ContactsScreen({ ...contactsController, modalView: contactsModal }, contactsView);
+
 const modal = {
 	[AppStateModals.productView]: productViewScreen,
 	[AppStateModals.basket]: basketViewScreen,
 	[AppStateModals.order]: orderScreen,
-	// [AppStateModals.contacts]: new ContactsScreen(
-	// 	new ContactsController(app.model, api)
-	// ),
+	[AppStateModals.contacts]: contactsScreen,
 	// [AppStateModals.success]: new SuccessScreen(
 	// 	new SuccessController(app.model)
 	// ),
@@ -162,17 +177,17 @@ app.on(AppStateChanges.order, () => {
 	modal[AppStateModals.order].data = app.model.orderData;
 });
 
-// app.on(AppStateModals.contacts, () => {
-// 	modal[AppStateModals.contacts].render({
-// 		data: { email: '', phone: '' },
-// 		isActive: true,
-// 		isDisabled: !app.model.contactsInfo?.email && !app.model.contactsInfo?.phone,
-// 	});
-// });
+app.on(AppStateModals.contacts, () => {
+	modal[AppStateModals.contacts].render({
+		data: { email: '', phone: '' },
+		isActive: true,
+		isDisabled: !app.model.contactsInfo?.email && !app.model.contactsInfo?.phone,
+	});
+});
 
-// app.on(AppStateChanges.contacts, () => {
-// 	modal[AppStateModals.contacts].data = app.model.contactsInfo;
-// });
+app.on(AppStateChanges.contacts, () => {
+	modal[AppStateModals.contacts].data = app.model.contactsInfo;
+});
 
 // app.on(AppStateModals.success, () => {
 // 	modal[AppStateModals.success].render({
