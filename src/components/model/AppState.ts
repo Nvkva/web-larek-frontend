@@ -30,13 +30,12 @@ export class AppStateModel implements AppState {
 		}
 	}
 
+	protected settings: AppStateSettings;
 	private totalNumber: number = 0;
 	private contactsData: ContactsData | null = null;
 
-	private _settings: AppStateSettings;
-
-	constructor(protected settings: AppStateSettings) {
-		this._settings = settings;
+	constructor(settings: AppStateSettings) {
+		this.settings = settings;
 	}
 
 	setProducts(products: Product[]): void {
@@ -62,7 +61,7 @@ export class AppStateModel implements AppState {
 	}
 
 	protected notifyChanged(changed: AppStateChanges): void {
-		this._settings.onChange(changed);
+		this.settings.onChange(changed);
 	}
 
 	// UI methods

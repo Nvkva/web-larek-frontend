@@ -1,3 +1,4 @@
+import { IClickableEvent } from "../../base/View";
 import { Product } from "../../model/ProductApi";
 import { CardData } from "../partial/Card";
 
@@ -8,5 +9,5 @@ export interface MainData {
 
 export interface MainSettings {
 	onOpenBasket: () => void;
-	onOpenProduct: (id: string) => void;
+	onOpenProduct: (args: IClickableEvent<string>) => void;
 }

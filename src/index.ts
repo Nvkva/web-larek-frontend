@@ -7,6 +7,9 @@ import { SuccessController } from './components/controller/Success';
 import { AppStateModel } from './components/model/AppState';
 import { AppStateEmitter } from './components/model/AppStateEmitter';
 import { ProductAPI } from './components/model/ProductApi';
+import { ListView } from './components/view/common/List';
+import { CardView } from './components/view/partial/Card';
+import { PageView } from './components/view/partial/Page';
 import { BasketViewScreen } from './components/view/screen/Basket';
 import { ContactsScreen } from './components/view/screen/Contacts';
 import { MainScreen } from './components/view/screen/Main';
@@ -16,7 +19,9 @@ import { SuccessScreen } from './components/view/screen/Success';
 import './scss/styles.scss';
 import { AppStateChanges, AppStateModals } from './types/components/model/AppState';
 import { ModalChange } from './types/components/model/AppStateEmitter';
+import { CardData } from './types/components/view/partial/Card';
 import { API_URL, CDN_URL, SETTINGS } from './utils/constants';
+import { cloneTemplate, ensureElement } from './utils/utils';
 
 const api = new ProductAPI(CDN_URL, API_URL);
 const app = new AppStateEmitter(api, SETTINGS.appState, AppStateModel);
@@ -27,7 +32,24 @@ api.getProducts()
 	})
 	.catch((err: string) => console.log(`Error: `, err));
 
-const main = new MainScreen(new MainController(app.model, api));
+const mainController = new MainController(app.model, api);
+const page = new PageView(ensureElement(SETTINGS.pageSelector), {
+	...SETTINGS.pageSettings,
+	onClick: mainController.onOpenBasket,
+});
+
+const gallery = new ListView<CardData>(
+	ensureElement(SETTINGS.gallerySelector),
+	{
+		...SETTINGS.gallerySettings,
+		item: new CardView(cloneTemplate(SETTINGS.cardCatalog), {
+			...SETTINGS.cardSettings,
+			onClick: mainController.onOpenProduct,
+		}),
+	}
+);
+const main = new MainScreen(mainController, page, gallery);
+
 const modal = {
 	[AppStateModals.productView]: new ProductViewScreen(
 		new ProductViewController(app.model, api)
