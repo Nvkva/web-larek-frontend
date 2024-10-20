@@ -1,7 +1,5 @@
 import { ModalScreen } from "./ModalScreen";
 import { IView } from "@app/types/components/base/View";
-import { SETTINGS } from "@app/utils/constants";
-import { cloneTemplate } from "@app/utils/utils";
 import { SuccessScreenData, SuccessScreenSettings } from "@app/types/components/view/screen/Success";
 import { SuccessView } from "../partial/Success";
 import { SuccessData } from "@app/types/components/view/partial/Success";

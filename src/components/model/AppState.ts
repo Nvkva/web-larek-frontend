@@ -111,6 +111,11 @@ export class AppStateModel implements AppState {
 		this.notifyChanged(AppStateChanges.contacts);
 	}
 
+	resetState(): void {
+		this.basket.clear();
+		this.notifyChanged(AppStateChanges.counter);
+	}
+
 	private calculateTotal(): void {
 		const basketValues: BasketProductData[] = Array.from(this.basket.values());
 		const totalValue = basketValues.reduce((acc, item) => acc + Number(item.price), 0);

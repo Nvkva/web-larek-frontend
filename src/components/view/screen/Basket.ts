@@ -25,6 +25,10 @@ export class BasketViewScreen extends ModalScreen<
     };
   }
 
+  set isDisabled(value: boolean) {
+    this.basketView.isDisabled = value;
+  }
+
   set total(total: string) {
     this.setValue(SETTINGS.basketModal.total, total === SETTINGS.pricelessTotalLabel ? total : `${total} cинапсов`)
   }

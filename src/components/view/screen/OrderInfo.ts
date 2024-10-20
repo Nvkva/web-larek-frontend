@@ -1,5 +1,5 @@
 import { ModalScreen } from "./ModalScreen";
-import { IChangeableEvent, IView } from "@app/types/components/base/View";
+import { IView } from "@app/types/components/base/View";
 import { OrderScreenData, OrderScreenSettings } from "@app/types/components/view/screen/OrderData";
 import { OrderInfoView } from "../partial/Order";
 import { OrderData } from "@app/types/components/view/partial/OrderData";

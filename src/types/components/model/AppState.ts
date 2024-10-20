@@ -21,6 +21,7 @@ export enum AppStateChanges {
 	basket = 'change:basket',
 	order = 'change:order',
 	contacts = 'modal:contacts',
+	counter = 'modal:counter',
 }
 
 // Модель данных приложения
@@ -41,6 +42,8 @@ export interface AppState {
 	setProducts(products: Product[]): void;
 	fillOrderData(value: OrderData): void;
 	fillContactsData(value: ContactsData): void;
+
+	resetState(): void;
 }
 
 // Настройки модели данных

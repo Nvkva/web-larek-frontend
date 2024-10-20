@@ -166,8 +166,12 @@ app.on(AppStateModals.productView, () => {
 app.on(AppStateChanges.basket, () => {
 	main.counter = app.model.basket.size;
 	modal[AppStateModals.basket].products = Array.from(app.model.basket.values());
-	// modal[AppStateModals.basket].isDisabled = app.model.basket.size === 0;
+	modal[AppStateModals.basket].isDisabled = app.model.basket.size === 0;
 	modal[AppStateModals.basket].total = app.model.totalLabel;
+});
+
+app.on(AppStateChanges.counter, () => {
+	main.counter = app.model.basket.size;
 });
 
 app.on(AppStateModals.basket, () => {

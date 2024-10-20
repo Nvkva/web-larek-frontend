@@ -4,13 +4,16 @@ import { BasketProductData, BasketViewData, BasketViewSettings } from '@app/type
 import { SETTINGS } from '@app/utils/constants';
 
 export class BasketView extends View<BasketViewData, BasketViewSettings> {
+  private submitButton: HTMLElement;
+
 
   constructor(element: HTMLElement, settings: BasketViewSettings, private innerView: ListView<BasketProductData>) {
     super(element, settings);
   }
 
   init(): void {
-    this.ensure(SETTINGS.basketModal.submitButton).addEventListener(
+    this.submitButton = this.ensure(SETTINGS.basketModal.submitButton)
+    this.submitButton.addEventListener(
 			'click',
 			this.onClickHandler.bind(this),
 		);
@@ -25,5 +28,9 @@ export class BasketView extends View<BasketViewData, BasketViewSettings> {
       SETTINGS.basketCardsContainerSelector,
       this.innerView.render({ items: products }),
     )
+  }
+
+  set isDisabled(value: boolean) {
+    (this.submitButton as HTMLButtonElement).disabled = value;
   }
 }
