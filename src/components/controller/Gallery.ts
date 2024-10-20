@@ -4,8 +4,13 @@ import { IClickableEvent } from "@app/types/components/base/View";
 
 export class GalleryController extends Controller<AppState> {
 	onOpenProduct = async (args: IClickableEvent<string>) => {
-		const product = await this.api.getProduct(args.item);
-		this.model.selectProduct(product);
-		this.model.openModal(AppStateModals.productView);
+    try {
+      const product = await this.api.getProduct(args.item);
+      this.model.selectProduct(product);
+      this.model.openModal(AppStateModals.productView);  
+    } catch (error) {
+      console.error(error);
+    }
+		
 	};
 }
